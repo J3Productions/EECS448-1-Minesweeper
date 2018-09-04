@@ -1,3 +1,21 @@
-This is going to be the most **dope** version of Minesweeper you've ever seen.
-#ballin
-Just watch.
+# minesweeper-project
+
+## Project setup
+```
+npm install
+```
+
+### Compiles and hot-reloads for development
+```
+npm run serve
+```
+
+### Compiles and minifies for production
+```
+npm run build
+```
+
+### Lints and fixes files
+```
+npm run lint
+```
