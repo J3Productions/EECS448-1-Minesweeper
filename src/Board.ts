@@ -36,22 +36,23 @@ class Board{
         this.numBombs = numBombs;
         this.board = new Array<Cell>(xSize * ySize);
         Object.seal(this.board);
-        genBombs(numBombs);
+        this.genBombs(numBombs);
 
     }
 
     private genBombs(numBombs: number){
         let genBombCounter = 0;
+        var vm = this;
 
         while(genBombCounter < numBombs){
 
-            const xBomb = Math.floor(Math.random() * this.xSize);
-            const yBomb = Math.floor(Math.random() * this.ySize);
+            const xBomb = Math.floor(Math.random() * vm.xSize);
+            const yBomb = Math.floor(Math.random() * vm.ySize);
 
-            const linearPosition = (yBomb * xSize) + xBomb;
+            const linearPosition = (yBomb * vm.xSize) + xBomb;
 
-            if (!board[linearPosition].getBomb()){
-                board[linearPosition].setBomb(true);
+            if (!vm.board[linearPosition].getBomb()){
+                vm.board[linearPosition].setBomb(true);
                 genBombCounter = genBombCounter + 1;
             }
 

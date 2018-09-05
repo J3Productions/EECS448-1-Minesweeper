@@ -29,9 +29,11 @@ import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 
 @Component
 export default class ConfigPage extends Vue {
-  private width = 0;
-  private height = 0;
-  private bombs = 0;
+  private width: number = 0;
+  private height: number = 0;
+  private bombs: number = 0;
+
+
 
   private errorMsg: string = '';
   private error = false;
