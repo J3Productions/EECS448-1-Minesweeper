@@ -1,32 +1,31 @@
 <template>
-  <div id="wrapper">
+  <div>
     <p id="header">Minesweeper</p>
     <div id="config-wrapper">
       <div id="config">
         <table>
           <tr>
             <td>Width:</td>
-            <td><input v-model="width" type="number"></input></td>
+            <td><input v-model="width" type="number"/></td>
           </tr>
           <tr>
             <td>Height:</td>
-            <td><input v-model="height" type="number"></input></td>
+            <td><input v-model="height" type="number"/></td>
           </tr>
           <tr>
             <td>Bombs:</td>
-            <td><input v-model="bombs" type="number"></input></td>
+            <td><input v-model="bombs" type="number"/></td>
           </tr>
         </table>
-        <p><input type="button" @click="submit" value="Start Game"></input></p>
+        <p><input type="button" @click="submit" value="Start Game"/></p>
       </div>
       <p>{{ errorMsg }}</p>
     </div>
-
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
+import { Component, Prop, Vue } from 'vue-property-decorator';
 import Board from 'Board.vue';
 
 @Component
@@ -36,17 +35,13 @@ export default class ConfigPage extends Vue {
   private bombs: number = 0;
   private errorMsg: string = '';
   private error = false;
-  showGameBoard: boolean = false;
 
-
-  public submit() {
-    var vm = this;
-    vm.errorMsg = vm.filterRange();
-    if(vm.errorMsg.length == 0){
-      console.log("Starting Game");
-      vm.showGameBoard = true;
+  public submit(showBoard: boolean) {
+    this.errorMsg = this.filterRange();
+    if (this.errorMsg.length === 0) {
+      this.$emit('show-board');
     }
-  }
+}
 
   public getWidth(): number {
     if (this.errorMsg === '') {
@@ -84,7 +79,7 @@ export default class ConfigPage extends Vue {
       invalid = invalid.substr(1, invalid.length);
     }
 
-    if(invalid.length > 0) {
+    if (invalid.length > 0) {
       invalid = `${invalid[0].toUpperCase()}${invalid.substr(1)}`;
     }
     return invalid.length > 0 ? `${invalid} have invalid values.` : '';
@@ -114,16 +109,6 @@ export default class ConfigPage extends Vue {
   }
   table {
     border-spacing: 10px;
-  }
-  #wrapper {
-    display: table;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    width: 100vw;
-    height: 95vh;
-    max-width: 100%;
-    font-size: 17px;
   }
   #header {
     font-size: 100px;
