@@ -42,17 +42,16 @@ class Board{
 
     private genBombs(numBombs: number){
         let genBombCounter = 0;
-        var vm = this;
 
         while(genBombCounter < numBombs){
 
-            const xBomb = Math.floor(Math.random() * vm.xSize);
-            const yBomb = Math.floor(Math.random() * vm.ySize);
+            const xBomb = Math.floor(Math.random() * this.xSize);
+            const yBomb = Math.floor(Math.random() * this.ySize);
 
-            const linearPosition = (yBomb * vm.xSize) + xBomb;
+            const linearPosition = (yBomb * this.xSize) + xBomb;
 
-            if (!vm.board[linearPosition].getBomb()){
-                vm.board[linearPosition].setBomb(true);
+            if (!this.board[linearPosition].getBomb()){
+                this.board[linearPosition].setBomb(true);
                 genBombCounter = genBombCounter + 1;
             }
 
