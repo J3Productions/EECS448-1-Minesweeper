@@ -17,29 +17,35 @@
             <td><input v-model="bombs" type="number"></input></td>
           </tr>
         </table>
-        <p><input type="button" v-on:click="submit" value="Start Game"></input></p>
+        <p><input type="button" @click="submit" value="Start Game"></input></p>
       </div>
       <p>{{ errorMsg }}</p>
     </div>
+
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
+import Board from 'Board.vue';
 
 @Component
 export default class ConfigPage extends Vue {
   private width: number = 0;
   private height: number = 0;
   private bombs: number = 0;
-
-
-
   private errorMsg: string = '';
   private error = false;
+  showGameBoard: boolean = false;
+
 
   public submit() {
-    this.errorMsg = this.filterRange();
+    var vm = this;
+    vm.errorMsg = vm.filterRange();
+    if(vm.errorMsg.length == 0){
+      console.log("Starting Game");
+      vm.showGameBoard = true;
+    }
   }
 
   public getWidth(): number {
