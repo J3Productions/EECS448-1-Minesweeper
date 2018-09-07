@@ -5,7 +5,7 @@
       <div id="config">
         <table>
           <tr>
-            <td>Width:</td>
+            <td>Width: <span class="glyphicon glyphicon-house"></span></td>
             <td><input v-model="width" type="number"/></td>
           </tr>
           <tr>
@@ -39,7 +39,12 @@ export default class ConfigPage extends Vue {
   public submit(showBoard: boolean) {
     this.errorMsg = this.filterRange();
     if (this.errorMsg.length === 0) {
-      this.$emit('show-board');
+      var obj =  {
+        width: this.width,
+        height: this.height,
+        bombs: this.bombs
+      }
+      this.$emit('show-board', obj);
     }
 }
 
