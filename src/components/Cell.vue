@@ -1,10 +1,16 @@
 <template>
     <span>
-        <div class="cell" v-if="!showBombCell && !showFlagCell" @click.left="onCellClick" @click.right="onCellFlag">
+        <div class="cell unclicked" v-if="!isFlag && !isDisplayingValue" @click.left="onCellClick" @click.right="onCellFlag">
+          &nbsp;
         </div>
-        <div class="cell-bomb" v-if="showBombCell">
+        <div class="cell value" v-if="isDisplayingValue && value > 0">
+          {{ this.value }}
         </div>
-        <div class="cell-flag" v-if="showFlagCell">
+        <div class="cell no-value" v-if="isDisplayingValue && value === 0">
+          &nbsp;
+        </div>
+        <div class="cell flag" v-if="isFlag">
+          &nbsp;
         </div>
     </span>
 </template>
@@ -14,36 +20,36 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 
 @Component
 export default class Cell extends Vue {
-  showBombCell = false;
-  showFlagCell = false;
-
-  @Prop() isBomb!: boolean;
-  @Prop() isFlag!: boolean;
   @Prop() x!: number;
   @Prop() y!: number;
+  @Prop() value!: number;
+  @Prop() isDisplayingValue!: boolean;
+
+  isFlag: boolean = false;
  
-  public onCellFlag(){
-    this.showFlagCell = true;
+  public onCellFlag(e: any){
+    e.preventDefault();
+    this.isFlag = !this.isFlag;
   }
 
   public onCellClick() {
-    this.$emit('cell-click', {x: this.x, y: this.y});
+    this.$emit('cell-click', {x: this.x, y: this.y}); 
   }
 
   public setBomb(state: boolean) {
-    this.isBomb = state;
-  }
-
-  public setFlag(state: boolean) {
-    this.isFlag = state;
+    if(state) this.value = -1;
   }
 
   public getBomb(): boolean {
-    return this.isBomb;
+    return this.value === -1;
   }
 
   public getFlag(): boolean {
     return this.isFlag;
+  }
+
+  public displayValue() {
+    this.isDisplayingValue = true;
   }
 }
 </script>
@@ -51,22 +57,20 @@ export default class Cell extends Vue {
 .cell {
   width: 30px;
   height: 30px;
-  background-color: green;
   border: 1px solid black;
   display: inline-block;
+  cursor: pointer;
 }
-.cell-bomb {
-  width: 30px;
-  height: 30px;
+.unclicked {
+  background-color: green
+}
+.value {
+  background-color: blue;
+}
+.no-value {
   background-color: white;
-  border: 1px solid black;
-  display: inline-block;
 }
-.cell-flag {
-  width: 30px;
-  height: 30px;
+.flag {
   background-color: orange;
-  border: 1px solid black;
-  display: inline-block;
 }
 </style>
