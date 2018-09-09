@@ -1,9 +1,14 @@
 <template>
   <div>
-    <div class="board-row" v-for="(row, i) in this.board" v-bind:key="i">
-        <cell :xcoord="i" :ycoord="j" :isBomb="board[i][j].getBomb()"
-        v-for="(cell, j) in row" 
-        v-bind:key="j"></cell>
+    <div class="board-row" v-for="(row, y) in this.board" v-bind:key="y">
+        <cell
+        :x="x"
+        :y="y"
+        :isBomb="getIsBomb(x, y)"
+        :isFlag="getIsBomb(x, y)"
+        @cell-click="cellClick"
+        v-for="(cell, x) in row"
+        :key="x"></cell>
     </div>
   </div>
 </template>
@@ -30,72 +35,61 @@ export default class Board extends Vue {
     this.board = board;
   }
 
-<<<<<<< HEAD
-    public recSearch(initX: number, initY: number){
-      this.recHelper(initX, initY);
+  public recSearch(initX: number, initY: number){
+    this.recHelper(initX, initY);
+  }
+  
+  private checkAdjacent(xPos: number, yPos: number){
+    let count = 0;
+    if(this.board[xPos + 1][yPos + 1].getBomb){
+      count = count + 1;
     }
-    
-    private checkAdjacent(xPos: number, yPos: number){
-      let count = 0;
-      if(this.board[xPos + 1][yPos + 1].getBomb){
-        count = count + 1;
-      }
-      if(this.board[xPos][yPos + 1].getBomb){
-        count = count + 1;
-      }
-      if(this.board[xPos + 1][yPos].getBomb){
-        count = count + 1;
-      }
-      if(this.board[xPos - 1][yPos - 1].getBomb){
-        count = count + 1;
-      }
-      if(this.board[xPos][yPos - 1].getBomb){
-        count = count + 1;
-      }
-      if(this.board[xPos - 1][yPos].getBomb){
-        count = count + 1;
-      }
-      if(this.board[xPos + 1][yPos - 1].getBomb){
-        count = count + 1;
-      }
-      if(this.board[xPos - 1][yPos + 1].getBomb){
-        count = count + 1;
-      }
-      return(count);
+    if(this.board[xPos][yPos + 1].getBomb){
+      count = count + 1;
     }
-
-    private recHelper(xPos: number, yPos: number){
-
-        let adjacent = this.checkAdjacent(xPos, yPos);
-        if(xPos < 0 || xPos >= this.xSize || yPos < 0 || yPos >= this.ySize){
-          return(0);
-        }
-
-        if(adjacent > 0){
-          return(adjacent);
-        }
-
-        else{
-          this.recHelper(xPos + 1, yPos);
-          this.recHelper(xPos - 1, yPos);
-          this.recHelper(xPos, yPos + 1);
-          this.recHelper(xPos, yPos - 1);
-          this.recHelper(xPos + 1, yPos + 1);
-          this.recHelper(xPos - 1, yPos - 1);
-          this.recHelper(xPos + 1, yPos - 1);
-          this.recHelper(xPos - 1, yPos + 1);
-        }
+    if(this.board[xPos + 1][yPos].getBomb){
+      count = count + 1;
     }
+    if(this.board[xPos - 1][yPos - 1].getBomb){
+      count = count + 1;
+    }
+    if(this.board[xPos][yPos - 1].getBomb){
+      count = count + 1;
+    }
+    if(this.board[xPos - 1][yPos].getBomb){
+      count = count + 1;
+    }
+    if(this.board[xPos + 1][yPos - 1].getBomb){
+      count = count + 1;
+    }
+    if(this.board[xPos - 1][yPos + 1].getBomb){
+      count = count + 1;
+    }
+    return(count);
+  }
 
+  private recHelper(xPos: number, yPos: number){
 
+      let adjacent = this.checkAdjacent(xPos, yPos);
+      if(xPos < 0 || xPos >= this.xSize || yPos < 0 || yPos >= this.ySize){
+        return(0);
+      }
 
-    private initializeCells(board: Cell[][], xSize: number, ySize: number): Cell[][] {
-      for (let i = 0; i < xSize; i++) {
-        board.push(new Array(ySize));
-        for (let j = 0; j < ySize; j++) {
-          board[i][j] = new Cell();
-        }
-=======
+      if(adjacent > 0){
+        return(adjacent);
+      }
+
+      else{
+        this.recHelper(xPos + 1, yPos);
+        this.recHelper(xPos - 1, yPos);
+        this.recHelper(xPos, yPos + 1);
+        this.recHelper(xPos, yPos - 1);
+        this.recHelper(xPos + 1, yPos + 1);
+        this.recHelper(xPos - 1, yPos - 1);
+        this.recHelper(xPos + 1, yPos - 1);
+        this.recHelper(xPos - 1, yPos + 1);
+      }
+  }
   private initializeCells(
     board: Cell[][],
     xSize: number,
@@ -105,10 +99,23 @@ export default class Board extends Vue {
       board.push(new Array(ySize));
       for (let j = 0; j < ySize; j++) {
         board[i][j] = new Cell();
->>>>>>> 6a40dbde737ceb53b4b6721bf829c7f6fd13decd
       }
     }
     return board;
+  }
+
+  private getIsBomb(x: number, y: number) {
+    return this.board[x][y].getBomb();
+  }
+
+  private getIsFlag(x: number, y: number) {
+    return this.board[x][y].getFlag();
+  }
+
+  private cellClick(coord: any) {
+    console.log(coord.x + " " + coord.y);
+    if(this.board[coord.x][coord.y].getBomb())
+      console.log('bomb');
   }
 
   private genBombs(board: Cell[][], numBombs: number) {

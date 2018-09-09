@@ -14,40 +14,36 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 
 @Component
 export default class Cell extends Vue {
-  private bomb = false;
-  private flag = false;
   showBombCell = false;
   showFlagCell = false;
 
-  @Prop() xcoord: any;
-  @Prop() ycoord: any;
-  @Prop() isBomb: any;
+  @Prop() isBomb!: boolean;
+  @Prop() isFlag!: boolean;
+  @Prop() x!: number;
+  @Prop() y!: number;
  
-  onCellFlag(){
+  public onCellFlag(){
     this.showFlagCell = true;
   }
 
-  onCellClick() {
-    console.log(this.isBomb);
-    if (this.isBomb) {
-      this.showBombCell = true;
-    }
+  public onCellClick() {
+    this.$emit('cell-click', {x: this.x, y: this.y});
   }
 
   public setBomb(state: boolean) {
-    this.bomb = state;
+    this.isBomb = state;
   }
 
   public setFlag(state: boolean) {
-    this.flag = state;
+    this.isFlag = state;
   }
 
   public getBomb(): boolean {
-    return this.bomb;
+    return this.isBomb;
   }
 
   public getFlag(): boolean {
-    return this.flag;
+    return this.isFlag;
   }
 }
 </script>
