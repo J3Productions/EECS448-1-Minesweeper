@@ -31,18 +31,55 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import Board from 'Board.vue';
 
+/**
+ * Contains fields for collecting configuration input from the user
+ */
 @Component
 export default class ConfigPage extends Vue {
+  /**
+   * The board width currently contained in the Width input
+   */
   private width: number = 0;
+
+  /**
+   * The board height currently contained in the Height input
+   */
   private height: number = 0;
+
+  /**
+   * The number of bombs currently contained in the Bombs input
+   */
   private bombs: number = 0;
+
+  /**
+   * The top-level error message shown if the user enters invalid input
+   */
   private errorMsg: string = '';
+
+  /**
+   * The error message shown if the user enters an invalid height
+   */
   private heightError: string = '';
+
+  /**
+   * The error message shown if the user enters an invalid width
+   */
   private widthError: string = '';
+
+  /**
+   * The error message shown if the user enters an invalid number of bombs
+   */
   private bombError: string = '';
+
+  /**
+   * Indicates whether the user entered invalid input
+   */
   private error = false;
 
-  public submit(showBoard: boolean) {
+  /**
+   * Processes user input and emits a 'show-board' event if the input is valid
+   */
+  public submit() {
     this.errorMsg = this.filterRange();
     if (this.errorMsg.length === 0) {
       var obj =  {
@@ -52,8 +89,13 @@ export default class ConfigPage extends Vue {
       }
       this.$emit('show-board', obj);
     }
-}
+  }
 
+  /**
+   * Gets the board width currently contained in the Width input
+   * @throws TypeError If the current board width is invalid
+   * @returns The board width currently contained in the Width input
+   */
   public getWidth(): number {
     if (this.errorMsg === '') {
       return this.width;
@@ -61,6 +103,11 @@ export default class ConfigPage extends Vue {
     throw new TypeError('Width is currently invalid');
   }
 
+  /**
+   * Gets the board height currently contained in the Height input
+   * @throws TypeError If the current board height is invalid
+   * @returns The board height currently contained in the Height input
+   */
   public getHeight(): number {
     if (this.errorMsg === '') {
       return this.height;
@@ -68,6 +115,11 @@ export default class ConfigPage extends Vue {
     throw new TypeError('Height is currently invalid');
   }
 
+  /**
+   * Gets the number of bombs currently contained in the Bombs input
+   * @throws TypeError if the current number of bombs is invalid
+   * @returns The number of bombs currently contained in the Bombs input
+   */
   public getBombs(): number {
     if (this.errorMsg === '') {
       return this.bombs;
@@ -75,6 +127,10 @@ export default class ConfigPage extends Vue {
     throw new TypeError('Bombs is currently invalid');
   }
 
+  /**
+   * Checks for invalid inputs from the user and sets relevant error messages if applicable
+   * @returns The top-level error message if there is an input error.
+   */
   private filterRange(): string {
     let invalid : string[] = [];
     this.widthError = '';
