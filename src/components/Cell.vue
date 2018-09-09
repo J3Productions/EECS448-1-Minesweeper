@@ -24,13 +24,15 @@ export default class Cell extends Vue {
   @Prop() y!: number;
   @Prop() value!: number;
   @Prop() isDisplayingValue!: boolean;
-
+  @Prop() getCanFlag!: (unFlag: boolean) => boolean;
   isFlag: boolean = false;
 
   public onCellFlag(e: any) {
     e.preventDefault();
-    this.isFlag = !this.isFlag;
-    this.$emit('flag', { x: this.x, y: this.y} );
+    if(this.getCanFlag(this.isFlag)){
+      this.isFlag = !this.isFlag;
+      this.$emit('flag', { x: this.x, y: this.y} );
+    }
   }
 
   public onCellClick() {

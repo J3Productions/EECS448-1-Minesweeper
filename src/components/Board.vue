@@ -1,13 +1,15 @@
 <template>
   <div>
     <div class="row" v-if="!gameOver"><span>Right click to flag</span></div>
+    <p>{{ errorMsg }}</p>
     <br v-if="!gameOver">
-    <div class="board-row" v-for="(row, y) in this.board" v-bind:key="y" v-if="!gameOver">
+    <div class="board-row" v-for="(row, y) in this.board" v-bind:key="y" v-if="!gameOver && !gameWon">
         <cell
         :x="x"
         :y="y"
         :value = "board[y][x].value"
         :isDisplayingValue = "board[y][x].isDisplayingValue"
+        :getCanFlag = "getCanFlag"
         @cell-click="cellClick"
         @clickedOnBomb="gameOver = true"
         @flag="onFlag"
@@ -19,6 +21,11 @@
       <h6><button @click="goToMenu" class="button">Menu</button></h6>
       <h6><button @click="restartGame" class="button">Restart Game</button></h6>
     </div>
+    <div v-if="gameWon">
+      <h2>You Won</h2>
+      <h6><button @click="goToMenu" class="button">Menu</button></h6>
+      <h6><button @click="restartGame" class="button">New Game</button></h6>
+    </div> 
   </div>
 </template>
 
@@ -34,6 +41,10 @@ import Cell from "./Cell.vue";
 export default class Board extends Vue {
   private board: Cell[][] = [];
   private gameOver = false;
+  private flagCount = 0;
+  private gameWon = false;
+  private errorMsg: string = '';
+  private canFlag = true;
   @Prop() private xSize!: any;
   @Prop() private ySize!: any;
   @Prop() private numBombs!: any;
@@ -47,13 +58,21 @@ export default class Board extends Vue {
     this.computeValues();
   }
 
+  private onGameOver(){
+    this.gameOver = true;
+    this.errorMsg = '';
+  }
+  
   restartGame(){
-    this.gameOver = false
+    this.gameOver = false;
+    this.gameWon = false;
     var board = this.initializeCells([], this.xSize, this.ySize);
     Object.seal(this.board);
     board = this.genBombs(board, this.numBombs);
     this.board = board;
     this.computeValues();
+    this.flagCount = 0;
+    this.errorMsg = '';
   }
 
   goToMenu(){
@@ -156,7 +175,50 @@ export default class Board extends Vue {
   }
 
   private onFlag(coord: any) {
-    this.board[coord.y][coord.x].isFlag = !this.board[coord.y][coord.x].isFlag;
+    this.errorMsg = '';
+    if(this.board[coord.y][coord.x].isFlag){
+      this.flagCount = this.flagCount - 1;
+    }
+    else{
+      this.flagCount = this.flagCount + 1;
+
+    }
+    this.board[coord.y][coord.x].isFlag = !this.board[coord.y][coord.x].isFlag;  
+    if(this.checkAllFlagged()){
+      this.gameWon = true;
+      this.board[coord.y][coord.x].isFlag = false;
+      this.flagCount = 0;
+    }
+
+
+  }
+
+  private getCanFlag(unFlag: boolean){
+    if(unFlag || this.flagCount + 1 <= this.numBombs){
+      return(true);
+    }
+    else{
+      this.errorMsg = 'Number of Flags cannot exceed number of Bombs';
+      return(false);
+    }
+  }
+
+  private checkAllFlagged(){
+    let correct = 0;
+    for(let y = 0; y < this.ySize; y++){
+      for(let x = 0; x < this.xSize; x++){
+        if(this.board[y][x].getFlag() && this.board[y][x].getBomb()){
+          correct = correct + 1;
+        }
+      }
+    }
+    if(correct == this.numBombs){
+      return(true);
+    }
+    else{
+
+      return(false);
+    }
   }
 
   private genBombs(board: Cell[][], numBombs: number): Cell[][] {

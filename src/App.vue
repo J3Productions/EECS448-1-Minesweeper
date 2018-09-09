@@ -26,6 +26,7 @@ export default class App extends Vue {
   private boardBombs: number = 0;
   private boardWidth: number = 0;
   private boardHeight: number = 0;
+  
 
   showBoard($event: any){
     var vm = this;
