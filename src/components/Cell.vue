@@ -1,15 +1,15 @@
 <template>
     <span>
-        <div class="cell unclicked" v-if="!isFlag && !isDisplayingValue" @click.left="onCellClick" @click.right="onCellFlag">
+        <div class="cell unclicked unselectable" v-if="!isFlag && !isDisplayingValue" @click.left="onCellClick" @click.right="onCellFlag">
           &nbsp;
         </div>
-        <div class="cell value" v-if="isDisplayingValue && value > 0">
+        <div class="cell value unselectable" v-if="isDisplayingValue && value > 0">
           {{ this.value }}
         </div>
-        <div class="cell no-value" v-if="isDisplayingValue && value === 0">
+        <div class="cell no-value unselectable" v-if="isDisplayingValue && value === 0">
           &nbsp;
         </div>
-        <div class="cell flag" v-if="isFlag">
+        <div class="cell flag unselectable" v-if="isFlag" @click.left="onCellClick" @click.right="onCellFlag">
           &nbsp;
         </div>
     </span>
@@ -72,5 +72,13 @@ export default class Cell extends Vue {
 }
 .flag {
   background-color: orange;
+}
+.unselectable {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 </style>
