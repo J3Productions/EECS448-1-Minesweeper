@@ -33,6 +33,7 @@ export default class Cell extends Vue {
   }
 
   public onCellClick() {
+    this.isFlag = false;
     this.$emit('cell-click', {x: this.x, y: this.y}); 
   }
 
