@@ -1,14 +1,22 @@
 <template>
   <div>
-    <div class="board-row" v-for="(row, y) in this.board" v-bind:key="y">
+    <div class="row" v-if="!gameOver"><span>Right click to flag</span></div>
+    <br v-if="!gameOver">
+    <div class="board-row" v-for="(row, y) in this.board" v-bind:key="y" v-if="!gameOver">
         <cell
         :x="x"
         :y="y"
         :value = "board[y][x].value"
         :isDisplayingValue = "board[y][x].isDisplayingValue"
         @cell-click="cellClick"
+        @clickedOnBomb="gameOver = true"
         v-for="(cell, x) in row"
         :key="x"></cell>
+    </div>
+    <div v-if="gameOver">
+      <h2>Game Over</h2>
+      <h6><button @click="goToMenu" class="button">Menu</button></h6>
+      <h6><button @click="restartGame" class="button">Restart Game</button></h6>
     </div>
   </div>
 </template>
@@ -24,16 +32,32 @@ import Cell from "./Cell.vue";
 })
 export default class Board extends Vue {
   private board: Cell[][] = [];
+  private gameOver = false;
   @Prop() private xSize!: any;
   @Prop() private ySize!: any;
   @Prop() private numBombs!: any;
 
   public created() {
+    console.log('creating board')
     var board = this.initializeCells([], this.xSize, this.ySize);
     Object.seal(this.board);
     board = this.genBombs(board, this.numBombs);
     this.board = board;
     this.computeValues();
+  }
+
+  restartGame(){
+    this.gameOver = false
+    var board = this.initializeCells([], this.xSize, this.ySize);
+    Object.seal(this.board);
+    board = this.genBombs(board, this.numBombs);
+    this.board = board;
+    this.computeValues();
+  }
+
+  goToMenu(){
+    this.gameOver = false
+    this.$emit('goToMenu')
   }
 
   public recSearch(initX: number, initY: number){
@@ -174,5 +198,15 @@ table {
   background-color: green;
   border: 1px solid white;
   display: inline-block;
+}
+.button {
+    background-color: white; /* Green */
+    border: none;
+    color: black;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
 }
 </style>

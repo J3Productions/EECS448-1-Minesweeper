@@ -2,6 +2,7 @@
   <div id="app">
     <ConfigPage v-if="!boardShowing" @show-board="showBoard($event)"/>
     <Board
+      @goToMenu="boardShowing = false"
       v-if="boardShowing"
       v-bind:xSize="boardWidth"
       v-bind:ySize="boardHeight"

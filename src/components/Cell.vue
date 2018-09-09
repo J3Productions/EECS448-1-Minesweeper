@@ -9,7 +9,7 @@
         <div class="cell no-value unselectable" v-if="isDisplayingValue && value === 0">
           &nbsp;
         </div>
-        <div class="cell flag unselectable" v-if="isFlag" @click.left="onCellClick" @click.right="onCellFlag">
+        <div class="cell flag unselectable" v-if="isFlag" @click.right="onCellFlag">
           &nbsp;
         </div>
     </span>
@@ -26,18 +26,21 @@ export default class Cell extends Vue {
   @Prop() isDisplayingValue!: boolean;
 
   isFlag: boolean = false;
- 
-  public onCellFlag(e: any){
+
+  public onCellFlag(e: any) {
     e.preventDefault();
     this.isFlag = !this.isFlag;
   }
 
   public onCellClick() {
-    this.$emit('cell-click', {x: this.x, y: this.y}); 
+    if (this.value == -1) {
+      this.$emit("clickedOnBomb");
+    }
+    this.$emit("cell-click", { x: this.x, y: this.y });
   }
 
   public setBomb(state: boolean) {
-    if(state) this.value = -1;
+    if (state) this.value = -1;
   }
 
   public getBomb(): boolean {
@@ -62,7 +65,7 @@ export default class Cell extends Vue {
   cursor: pointer;
 }
 .unclicked {
-  background-color: green
+  background-color: green;
 }
 .value {
   background-color: blue;
