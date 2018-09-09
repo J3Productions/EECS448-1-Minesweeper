@@ -19,7 +19,10 @@
         </table>
         <p><input type="button" @click="submit" value="Start Game"/></p>
       </div>
-      <p>{{ errorMsg }}</p>
+      <p>{{ errorMsg}}</p>
+      <p>{{ heightError}}</p>
+      <p>{{ widthError}}</p>
+      <p>{{ bombError}}</p>
     </div>
   </div>
 </template>
@@ -34,6 +37,9 @@ export default class ConfigPage extends Vue {
   private height: number = 0;
   private bombs: number = 0;
   private errorMsg: string = '';
+  private heightError: string = '';
+  private widthError: string = '';
+  private bombError: string = '';
   private error = false;
 
   public submit(showBoard: boolean) {
@@ -70,24 +76,45 @@ export default class ConfigPage extends Vue {
   }
 
   private filterRange(): string {
-    let invalid = '';
+    let invalid : string[] = [];
+    this.widthError = '';
+    this.heightError = '';
+    this.bombError = '';
+
     if (this.width < 2 || this.width > 50) {
-      invalid += 'width';
+      invalid.push('Width');
+      this.widthError += 'Width must be between 2 and 50';
+
     }
     if (this.height < 2 || this.height > 50) {
-      invalid += ', height';
+      invalid.push('Height');
+      this.heightError += 'Height must be between 2 and 50';
     }
-    if (this.bombs < 1 || this.bombs > this.height * this.width - 1) {
-      invalid += ', number of bombs';
-    }
-    if (invalid[0] === '\n') {
-      invalid = invalid.substr(1, invalid.length);
+    if (this.bombs < 1) {
+      invalid.push('Number of Bombs');
+      this.bombError += `Number of Bombs must be greater than 1`;
+
     }
 
-    if (invalid.length > 0) {
-      invalid = `${invalid[0].toUpperCase()}${invalid.substr(1)}`;
+    else if(this.bombs > this.height * this.width - 1 && this.width > 1 && this.height > 1){
+      invalid.push('Number of Bombs');
+      let max = this.height * this.width - 1;
+      this.bombError += `Number of Bombs must be between 1 and ${max}`
     }
-    return invalid.length > 0 ? `${invalid} have invalid values.` : '';
+
+    if(invalid.length == 1){
+      return(`${invalid[0]} has invalid value.`);
+    }
+
+    if(invalid.length == 2){
+      return(`${invalid[0]} and ${invalid[1]} have invalid values.`);
+    }
+
+    if(invalid.length == 3){
+      return(`${invalid[0]}, ${invalid[1]}, and ${invalid[2]} have invalid values.`);      
+    }
+
+    return('');
   }
 }
 </script>
