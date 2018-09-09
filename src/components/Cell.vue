@@ -30,11 +30,12 @@ export default class Cell extends Vue {
   public onCellFlag(e: any) {
     e.preventDefault();
     this.isFlag = !this.isFlag;
+    this.$emit('flag', { x: this.x, y: this.y} );
   }
 
   public onCellClick() {
     this.isFlag = false;
-    this.$emit('cell-click', {x: this.x, y: this.y}); 
+    this.$emit('cell-click', { x: this.x, y: this.y }); 
   }
 
   public setBomb(state: boolean) {

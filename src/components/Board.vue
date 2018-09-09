@@ -10,6 +10,7 @@
         :isDisplayingValue = "board[y][x].isDisplayingValue"
         @cell-click="cellClick"
         @clickedOnBomb="gameOver = true"
+        @flag="onFlag"
         v-for="(cell, x) in row"
         :key="x"></cell>
     </div>
@@ -103,6 +104,9 @@ export default class Board extends Vue {
 
     let value = this.board[yPos][xPos].value;
     if(value >= 0) {
+      if(this.board[yPos][xPos].isFlag) {
+        return;
+      }
       if(value > 0 || this.board[yPos][xPos].isDisplayingValue){
         this.board[yPos][xPos].displayValue();
         return;
@@ -133,6 +137,7 @@ export default class Board extends Vue {
         board[i][j].x = j;
         board[i][j].y = i;
         board[i][j].isDisplayingValue = false;
+        board[i][j].isFlag = false;
       }
     }
     return board;
@@ -148,6 +153,10 @@ export default class Board extends Vue {
 
   private cellClick(coord: any) {
     this.recSearch(coord.x, coord.y);
+  }
+
+  private onFlag(coord: any) {
+    this.board[coord.y][coord.x].isFlag = !this.board[coord.y][coord.x].isFlag;
   }
 
   private genBombs(board: Cell[][], numBombs: number): Cell[][] {
