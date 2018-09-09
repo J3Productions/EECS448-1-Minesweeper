@@ -33,10 +33,8 @@ export default class Cell extends Vue {
   }
 
   public onCellClick() {
-    if (this.value == -1) {
-      this.$emit("clickedOnBomb");
-    }
-    this.$emit("cell-click", { x: this.x, y: this.y });
+    this.isFlag = false;
+    this.$emit('cell-click', {x: this.x, y: this.y}); 
   }
 
   public setBomb(state: boolean) {
