@@ -1,7 +1,9 @@
 <template>
   <div>
+    <div class="row"> <span>Bomb(single click): </span><div class="cell-bomb"></div>&nbsp;&nbsp;&nbsp;<span style="padding-bottom: 20px">Flag(double click): </span><div class="cell-flag"></div> </div> 
+    <br>
     <div class="board-row" v-for="(row, i) in this.board" v-bind:key="i">
-        <cell :xcoord="i" :ycoord="j" :isBomb="board[i][j].getBomb()"
+        <cell :isBomb="board[i][j].getBomb()"
         v-for="(cell, j) in row" 
         v-bind:key="j"></cell>
     </div>
@@ -67,5 +69,26 @@ table {
 }
 .board-row {
   margin-bottom: -3px;
+}
+.cell {
+  width: 15px;
+  height: 15px;
+  background-color: white;
+  border: 1px solid black;
+  display: inline-block;
+}
+.cell-bomb {
+  width: 15px;
+  height: 15px;
+  background-color: black;
+  border: 1px solid white;
+  display: inline-block;
+}
+.cell-flag {
+  width: 15px;
+  height: 15px;
+  background-color: green;
+  border: 1px solid white;
+  display: inline-block;
 }
 </style>

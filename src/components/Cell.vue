@@ -1,10 +1,13 @@
 <template>
     <span>
         <div class="cell" v-if="!showBombCell && !showFlagCell" @click.left="onCellClick" @click.right="onCellFlag">
+            <span style="color: black">{Math.floor(Math.random() * 6) + 1  {number}}</span>
         </div>
         <div class="cell-bomb" v-if="showBombCell">
+            <span style="color: black">{{number}}</span>
         </div>
         <div class="cell-flag" v-if="showFlagCell">
+            <span style="color: green">{{number}}</span>
         </div>
     </span>
 </template>
@@ -18,11 +21,15 @@ export default class Cell extends Vue {
   private flag = false;
   showBombCell = false;
   showFlagCell = false;
+  number = 0;
 
-  @Prop() xcoord: any;
-  @Prop() ycoord: any;
   @Prop() isBomb: any;
  
+
+  created() {
+      this.number = Math.floor(Math.random() * 5) + 1  
+  }
+
   onCellFlag(){
     this.showFlagCell = true;
   }
@@ -55,21 +62,21 @@ export default class Cell extends Vue {
 .cell {
   width: 30px;
   height: 30px;
-  background-color: green;
+  background-color: white;
   border: 1px solid black;
   display: inline-block;
 }
 .cell-bomb {
   width: 30px;
   height: 30px;
-  background-color: white;
+  background-color: black;
   border: 1px solid black;
   display: inline-block;
 }
 .cell-flag {
   width: 30px;
   height: 30px;
-  background-color: orange;
+  background-color: green;
   border: 1px solid black;
   display: inline-block;
 }
