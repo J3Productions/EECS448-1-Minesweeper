@@ -1,13 +1,16 @@
 <template>
     <span>
-        <div class="cell" v-if="!showBombCell && !showFlagCell" @click.left="onCellClick" @click.right="onCellFlag">
-            <span style="color: black">{Math.floor(Math.random() * 6) + 1  {number}}</span>
+        <div class="cell unclicked" v-if="!isFlag && !isDisplayingValue" @click.left="onCellClick" @click.right="onCellFlag">
+          &nbsp;
         </div>
-        <div class="cell-bomb" v-if="showBombCell">
-            <span style="color: black">{{number}}</span>
+        <div class="cell value" v-if="isDisplayingValue && value > 0">
+          {{ this.value }}
         </div>
-        <div class="cell-flag" v-if="showFlagCell">
-            <span style="color: green">{{number}}</span>
+        <div class="cell no-value" v-if="isDisplayingValue && value === 0">
+          &nbsp;
+        </div>
+        <div class="cell flag" v-if="isFlag">
+          &nbsp;
         </div>
     </span>
 </template>
@@ -17,44 +20,36 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 
 @Component
 export default class Cell extends Vue {
-  private bomb = false;
-  private flag = false;
-  showBombCell = false;
-  showFlagCell = false;
-  number = 0;
+  @Prop() x!: number;
+  @Prop() y!: number;
+  @Prop() value!: number;
+  @Prop() isDisplayingValue!: boolean;
 
-  @Prop() isBomb: any;
+  isFlag: boolean = false;
  
-
-  created() {
-      this.number = Math.floor(Math.random() * 5) + 1  
+  public onCellFlag(e: any){
+    e.preventDefault();
+    this.isFlag = !this.isFlag;
   }
 
-  onCellFlag(){
-    this.showFlagCell = true;
-  }
-
-  onCellClick() {
-    console.log(this.isBomb);
-    if (this.isBomb) {
-      this.showBombCell = true;
-    }
+  public onCellClick() {
+    this.$emit('cell-click', {x: this.x, y: this.y}); 
   }
 
   public setBomb(state: boolean) {
-    this.bomb = state;
-  }
-
-  public setFlag(state: boolean) {
-    this.flag = state;
+    if(state) this.value = -1;
   }
 
   public getBomb(): boolean {
-    return this.bomb;
+    return this.value === -1;
   }
 
   public getFlag(): boolean {
-    return this.flag;
+    return this.isFlag;
+  }
+
+  public displayValue() {
+    this.isDisplayingValue = true;
   }
 }
 </script>
@@ -62,22 +57,20 @@ export default class Cell extends Vue {
 .cell {
   width: 30px;
   height: 30px;
+  border: 1px solid black;
+  display: inline-block;
+  cursor: pointer;
+}
+.unclicked {
+  background-color: green
+}
+.value {
+  background-color: blue;
+}
+.no-value {
   background-color: white;
-  border: 1px solid black;
-  display: inline-block;
 }
-.cell-bomb {
-  width: 30px;
-  height: 30px;
-  background-color: black;
-  border: 1px solid black;
-  display: inline-block;
-}
-.cell-flag {
-  width: 30px;
-  height: 30px;
-  background-color: green;
-  border: 1px solid black;
-  display: inline-block;
+.flag {
+  background-color: orange;
 }
 </style>

@@ -1,11 +1,14 @@
 <template>
   <div>
-    <div class="row"> <span>Bomb(single click): </span><div class="cell-bomb"></div>&nbsp;&nbsp;&nbsp;<span style="padding-bottom: 20px">Flag(double click): </span><div class="cell-flag"></div> </div> 
-    <br>
-    <div class="board-row" v-for="(row, i) in this.board" v-bind:key="i">
-        <cell :isBomb="board[i][j].getBomb()"
-        v-for="(cell, j) in row" 
-        v-bind:key="j"></cell>
+    <div class="board-row" v-for="(row, y) in this.board" v-bind:key="y">
+        <cell
+        :x="x"
+        :y="y"
+        :value = "board[y][x].value"
+        :isDisplayingValue = "board[y][x].isDisplayingValue"
+        @cell-click="cellClick"
+        v-for="(cell, x) in row"
+        :key="x"></cell>
     </div>
   </div>
 </template>
@@ -28,8 +31,70 @@ export default class Board extends Vue {
   public created() {
     var board = this.initializeCells([], this.xSize, this.ySize);
     Object.seal(this.board);
-    this.genBombs(board, this.numBombs);
+    board = this.genBombs(board, this.numBombs);
     this.board = board;
+    this.computeValues();
+  }
+
+  public recSearch(initX: number, initY: number){
+    this.recHelper(initX, initY);
+  }
+
+  private checkAdjacent(xPos: number, yPos: number): number {
+    let count = 0;
+    if(this.isInBoard(xPos + 1, yPos + 1) && this.board[yPos + 1][xPos + 1].getBomb()){
+      count = count + 1;
+    }
+    if(this.isInBoard(xPos + 1, yPos) && this.board[yPos][xPos + 1].getBomb()){
+      count = count + 1;
+    }
+    if(this.isInBoard(xPos, yPos + 1) && this.board[yPos + 1][xPos].getBomb()){
+      count = count + 1;
+    }
+    if(this.isInBoard(xPos - 1, yPos - 1) && this.board[yPos - 1][xPos - 1].getBomb()){
+      count = count + 1;
+    }
+    if(this.isInBoard(xPos - 1, yPos) && this.board[yPos][xPos - 1].getBomb()){
+      count = count + 1;
+    }
+    if(this.isInBoard(xPos, yPos - 1) && this.board[yPos - 1][xPos].getBomb()){
+      count = count + 1;
+    }
+    if(this.isInBoard(xPos - 1, yPos + 1) && this.board[yPos + 1][xPos - 1].getBomb()){
+      count = count + 1;
+    }
+    if(this.isInBoard(xPos + 1, yPos - 1) && this.board[yPos - 1][xPos + 1].getBomb()){
+      count = count + 1;
+    }
+    if(this.isInBoard(xPos, yPos) && this.board[yPos][xPos].getBomb()){
+      return(-1);
+    }
+    return(count);
+  }
+
+  private recHelper(xPos: number, yPos: number) {
+    if(xPos < 0 || xPos >= this.xSize || yPos < 0 || yPos >= this.ySize){
+      return;
+    }
+
+    let value = this.board[yPos][xPos].value;
+    if(value >= 0) {
+      if(value > 0 || this.board[yPos][xPos].isDisplayingValue){
+        this.board[yPos][xPos].displayValue();
+        return;
+      }
+      else{
+        this.board[yPos][xPos].displayValue();
+        this.recHelper(xPos + 1, yPos);
+        this.recHelper(xPos - 1, yPos);
+        this.recHelper(xPos, yPos + 1);
+        this.recHelper(xPos, yPos - 1);
+        this.recHelper(xPos + 1, yPos + 1);
+        this.recHelper(xPos - 1, yPos - 1);
+        this.recHelper(xPos + 1, yPos - 1);
+        this.recHelper(xPos - 1, yPos + 1);
+      }
+    }
   }
 
   private initializeCells(
@@ -37,29 +102,48 @@ export default class Board extends Vue {
     xSize: number,
     ySize: number
   ): Cell[][] {
-    for (let i = 0; i < xSize; i++) {
+    for (let i = 0; i < ySize; i++) {
       board.push(new Array(ySize));
-      for (let j = 0; j < ySize; j++) {
+      for (let j = 0; j < xSize; j++) {
         board[i][j] = new Cell();
+        board[i][j].x = j;
+        board[i][j].y = i;
+        board[i][j].isDisplayingValue = false;
       }
     }
     return board;
   }
 
-  private genBombs(board: Cell[][], numBombs: number) {
+  private computeValues() {
+    for(let i = 0; i < this.ySize; i++) {
+      for(let j = 0; j < this.xSize; j++) {
+        this.board[i][j].value = this.checkAdjacent(j, i);
+      }
+    }
+  }
+
+  private cellClick(coord: any) {
+    this.recSearch(coord.x, coord.y);
+  }
+
+  private genBombs(board: Cell[][], numBombs: number): Cell[][] {
     let genBombCounter = 0;
 
     while (genBombCounter < numBombs) {
       const xBomb = Math.floor(Math.random() * this.xSize);
       const yBomb = Math.floor(Math.random() * this.ySize);
 
-      if (!board[xBomb][yBomb].getBomb()) {
-        board[xBomb][yBomb].setBomb(true);
-        console.log(board[xBomb][yBomb].getBomb());
-        console.log( xBomb + ' ' + yBomb + 'is a bomb')
+      if (!board[yBomb][xBomb].getBomb()) {
+        board[yBomb][xBomb].setBomb(true);
         genBombCounter = genBombCounter + 1;
       }
     }
+
+    return board;
+  }
+
+  private isInBoard(x: number, y: number): boolean {
+    return this.board[y] !== undefined && this.board[y][x] !== undefined;
   }
 }
 </script>
