@@ -29,6 +29,64 @@ export default class Board extends Vue {
         this.genBombs(this.numBombs);
     }
 
+    public recSearch(initX: number, initY: number){
+      this.recHelper(initX, initY);
+    }
+    
+    private checkAdjacent(xPos: number, yPos: number){
+      let count = 0;
+      if(this.board[xPos + 1][yPos + 1].getBomb){
+        count = count + 1;
+      }
+      if(this.board[xPos][yPos + 1].getBomb){
+        count = count + 1;
+      }
+      if(this.board[xPos + 1][yPos].getBomb){
+        count = count + 1;
+      }
+      if(this.board[xPos - 1][yPos - 1].getBomb){
+        count = count + 1;
+      }
+      if(this.board[xPos][yPos - 1].getBomb){
+        count = count + 1;
+      }
+      if(this.board[xPos - 1][yPos].getBomb){
+        count = count + 1;
+      }
+      if(this.board[xPos + 1][yPos - 1].getBomb){
+        count = count + 1;
+      }
+      if(this.board[xPos - 1][yPos + 1].getBomb){
+        count = count + 1;
+      }
+      return(count);
+    }
+
+    private recHelper(xPos: number, yPos: number){
+
+        let adjacent = this.checkAdjacent(xPos, yPos);
+        if(xPos < 0 || xPos >= this.xSize || yPos < 0 || yPos >= this.ySize){
+          return(0);
+        }
+
+        if(adjacent > 0){
+          return(adjacent);
+        }
+
+        else{
+          this.recHelper(xPos + 1, yPos);
+          this.recHelper(xPos - 1, yPos);
+          this.recHelper(xPos, yPos + 1);
+          this.recHelper(xPos, yPos - 1);
+          this.recHelper(xPos + 1, yPos + 1);
+          this.recHelper(xPos - 1, yPos - 1);
+          this.recHelper(xPos + 1, yPos - 1);
+          this.recHelper(xPos - 1, yPos + 1);
+        }
+    }
+
+
+
     private initializeCells(board: Cell[][], xSize: number, ySize: number): Cell[][] {
       for (let i = 0; i < xSize; i++) {
         board.push(new Array(ySize));
@@ -56,10 +114,10 @@ export default class Board extends Vue {
 }
 </script>
 <style scoped>
-  table {
-    border-spacing: 10px;
-  }
-  .board-row {
-    margin-bottom: -3px;
-  }
+table {
+  border-spacing: 10px;
+}
+.board-row {
+  margin-bottom: -3px;
+}
 </style>
