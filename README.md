@@ -7,5 +7,5 @@ npm run serve
 
 ### Dependencies used
 ```
-VueJS [](https://vuejs.org/v2/guide/)
+[VueJS](https://vuejs.org/v2/guide/)
 ```
