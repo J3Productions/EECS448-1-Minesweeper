@@ -7,5 +7,5 @@ npm run serve
 
 ### Dependencies used
 ```
-[I'm an inline-style link](https://www.google.com)
+[link text itself]: http://www.reddit.com
 ```
