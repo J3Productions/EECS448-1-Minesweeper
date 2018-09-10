@@ -7,6 +7,6 @@ npm run serve
 
 ### Dependencies used
 
-[VueJS(JavaScript Framework)]: https://vuejs.org/v2/guide/
+* [VueJS(JavaScript Framework)](https://vuejs.org/v2/guide/)
+    * [VueJS repo](https://github.com/vuejs/vue)
 
-[VueJS repo]: https://github.com/vuejs/vue
