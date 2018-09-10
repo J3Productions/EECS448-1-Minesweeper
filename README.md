@@ -6,6 +6,7 @@ npm run serve
 ```
 
 ### Dependencies used
-```
-[link text itself]: http://www.reddit.com
-```
+
+[VueJS(JavaScript Framework)]: https://vuejs.org/v2/guide/
+
+[VueJS repo]: https://github.com/vuejs/vue
