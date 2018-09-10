@@ -137,14 +137,14 @@ export default class ConfigPage extends Vue {
     this.heightError = '';
     this.bombError = '';
 
-    if (this.width < 2 || this.width > 50) {
+    if (this.width < 2 || this.width > 20) {
       invalid.push('Width');
-      this.widthError += 'Width must be between 2 and 50';
+      this.widthError += 'Width must be between 2 and 20';
 
     }
-    if (this.height < 2 || this.height > 50) {
+    if (this.height < 2 || this.height > 20) {
       invalid.push('Height');
-      this.heightError += 'Height must be between 2 and 50';
+      this.heightError += 'Height must be between 2 and 20';
     }
     if (this.bombs < 1) {
       invalid.push('Number of Bombs');

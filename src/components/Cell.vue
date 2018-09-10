@@ -42,7 +42,11 @@ export default class Cell extends Vue {
    * Indicates whether this cell should display its value (the number of adjacent bombs)
    */
   @Prop() isDisplayingValue!: boolean;
-  @Prop() getCanFlag!: (unFlag: boolean) => boolean;
+
+  /**
+   * Gets a value indicating whether a flag can currently be placed
+   */
+  @Prop() getCanFlag!: () => boolean;
 
   /**
    * Indicates whether this cell has been flagged by the user
@@ -55,7 +59,7 @@ export default class Cell extends Vue {
    */
   public onCellFlag(e: any) {
     e.preventDefault();
-    if(this.getCanFlag(this.isFlag)){
+    if(!this.isFlag && this.getCanFlag() || this.isFlag){
       this.isFlag = !this.isFlag;
       this.$emit('flag', { x: this.x, y: this.y} );
     }

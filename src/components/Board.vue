@@ -39,16 +39,49 @@ import Cell from "./Cell.vue";
   }
 })
 export default class Board extends Vue {
+  /**
+   * The cells in the game board
+   */
   private board: Cell[][] = [];
+
+  /**
+   * Indicates whether the game has been finished with a loss
+   */
   private gameOver = false;
-  private flagCount = 0;
+
+  /**
+   * Indicates whether the game has been finished with a win
+   */
   private gameWon = false;
-  private errorMsg: string = '';
-  private canFlag = true;
+
+  /**
+   * The size of the board in the x dimension
+   */
   @Prop() private xSize!: any;
+
+  /**
+   * The size of the board in the y dimension
+   */
   @Prop() private ySize!: any;
+
+  /**
+   * The number of bombs contained in the board
+   */
   @Prop() private numBombs!: any;
 
+  /**
+   * The error message to display to the user, if applicable
+   */
+  private errorMsg: string = '';
+
+  /**
+   * The number of flags currently placed on the board
+   */
+  private flagCount: number = 0;
+
+  /**
+   * Called when the board is created
+   */
   public created() {
     console.log('creating board')
     var board = this.initializeCells([], this.xSize, this.ySize);
@@ -58,11 +91,17 @@ export default class Board extends Vue {
     this.computeValues();
   }
 
+  /**
+   * Called when the game ends in a loss
+   */
   private onGameOver(){
     this.gameOver = true;
     this.errorMsg = '';
   }
   
+  /**
+   * Reinitializes the game with a new game board using the same parameters
+   */
   restartGame(){
     this.gameOver = false;
     this.gameWon = false;
@@ -75,15 +114,29 @@ export default class Board extends Vue {
     this.errorMsg = '';
   }
 
+  /**
+   * Emits the 'goToMenu' event, indicating that the UI should return to the input menu
+   */
   goToMenu(){
     this.gameOver = false
     this.$emit('goToMenu')
   }
 
+  /**
+   * Reveals the values of the proper cells starting from a given initial point
+   * @param initX The x coordinate of the initial point
+   * @param initY The y coordinate of the initial point
+   */
   public recSearch(initX: number, initY: number){
     this.recHelper(initX, initY);
   }
 
+  /**
+   * Gets the number of bombs that are adjacent to a cell, or -1 if the cell is a bomb
+   * @param xPos The x coordinate of the cell to use
+   * @param yPos The y coordinate of the cell to use
+   * @returns The number of bombs adjacent to the cell at the given coordinates
+   */
   private checkAdjacent(xPos: number, yPos: number): number {
     let count = 0;
     if(this.isInBoard(xPos + 1, yPos + 1) && this.board[yPos + 1][xPos + 1].getBomb()){
@@ -116,6 +169,11 @@ export default class Board extends Vue {
     return(count);
   }
 
+  /**
+   * Reveals the values of the proper cells starting from a given initial point
+   * @param xPos The x coordinate of the initial point
+   * @param yPos The y coordinate of the initial point
+   */
   private recHelper(xPos: number, yPos: number) {
     if(xPos < 0 || xPos >= this.xSize || yPos < 0 || yPos >= this.ySize){
       return;
@@ -144,6 +202,13 @@ export default class Board extends Vue {
     }
   }
 
+  /**
+   * Initializes the Cells in a given board array with default values
+   * @param board The board in which to initialize the cells
+   * @param xSize The size of the board in the x dimension
+   * @param ySize The size of the board in the y dimension
+   * @returns A board of the given size containing default cells
+   */
   private initializeCells(
     board: Cell[][],
     xSize: number,
@@ -162,6 +227,9 @@ export default class Board extends Vue {
     return board;
   }
 
+  /**
+   * Computes the values associated with all cells in the game board
+   */
   private computeValues() {
     for(let i = 0; i < this.ySize; i++) {
       for(let j = 0; j < this.xSize; j++) {
@@ -170,10 +238,18 @@ export default class Board extends Vue {
     }
   }
 
+  /**
+   * Called when the 'cell-click' event is emitted from a cell
+   * @param coord The coordinates, in the format { x: x, y: y }, of the clicked cell
+   */
   private cellClick(coord: any) {
     this.recSearch(coord.x, coord.y);
   }
 
+  /**
+   * Called when the 'flag' event is emitted from a cell
+   * @param coord The coordinates, in the format { x: x, y: y } of the clicked cell
+   */
   private onFlag(coord: any) {
     this.errorMsg = '';
     if(this.board[coord.y][coord.x].isFlag){
@@ -193,8 +269,12 @@ export default class Board extends Vue {
 
   }
 
-  private getCanFlag(unFlag: boolean){
-    if(unFlag || this.flagCount + 1 <= this.numBombs){
+  /**
+   * Gets a value indicating whether the user can currently place a flag
+   * @param unFlag Indicates whether the user is removing or adding a flag
+   */
+  private getCanFlag(): boolean{
+    if(this.flagCount + 1 <= this.numBombs){
       return(true);
     }
     else{
@@ -203,7 +283,11 @@ export default class Board extends Vue {
     }
   }
 
-  private checkAllFlagged(){
+  /**
+   * Checks if all bombs have been correctly flagged
+   * @returns A value indicating whether all bombs have been correctly flagged
+   */
+  private checkAllFlagged(): boolean {
     let correct = 0;
     for(let y = 0; y < this.ySize; y++){
       for(let x = 0; x < this.xSize; x++){
@@ -221,6 +305,12 @@ export default class Board extends Vue {
     }
   }
 
+  /**
+   * Places a given number of bombs at random locations on the given board
+   * @param board The board in which to place bombs
+   * @param numBombs The number of bombs to place
+   * @returns A board with numBombs of its cells containing bombs
+   */
   private genBombs(board: Cell[][], numBombs: number): Cell[][] {
     let genBombCounter = 0;
 
@@ -237,6 +327,12 @@ export default class Board extends Vue {
     return board;
   }
 
+  /**
+   * Gets a value indicating whether the given (x, y) position is within the board
+   * @param x The x position
+   * @param y The y position
+   * @returns A value indicating whether the given (x, y) position is within the board
+   */
   private isInBoard(x: number, y: number): boolean {
     return this.board[y] !== undefined && this.board[y][x] !== undefined;
   }
