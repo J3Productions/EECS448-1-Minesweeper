@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="row" v-if="!gameOver"><span>Right click to flag</span></div>
+    <div class="row" v-if="!gameOver && !gameWon"><span>Right click to flag</span></div>
     <p>{{ errorMsg }}</p>
     <br v-if="!gameOver">
     <div class="board-row" v-for="(row, y) in this.board" v-bind:key="y" v-if="!gameOver && !gameWon">
