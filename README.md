@@ -1,21 +1,12 @@
 # minesweeper-project
 
-## Project setup
-```
-npm install
-```
-
 ### Compiles and hot-reloads for development
 ```
 npm run serve
 ```
 
-### Compiles and minifies for production
-```
-npm run build
-```
+### Dependencies used
 
-### Lints and fixes files
-```
-npm run lint
-```
+* [VueJS(JavaScript Framework)](https://vuejs.org/v2/guide/)
+    * [VueJS repo](https://github.com/vuejs/vue)
+
