@@ -110,6 +110,7 @@ export default class Cell extends Vue {
    */
   public displayValue() {
     this.isDisplayingValue = true;
+    this.isReavealed = true;
   }
 
   /**
