@@ -42,9 +42,9 @@ export default class Cell extends Vue {
    * Indicates whether this cell should display its value (the number of adjacent bombs)
    */
   @Prop() isDisplayingValue!: boolean;
-  
+
   /**
-   * When this variable change to true 
+   * This holds the value of isDisplayingValue while all isDisplayingValue changes to true in cheet mode. After cheet mode, isDisplayingValue is changed back to isRevealed.
    */
   @Prop() isRevealed!: boolean;
 
@@ -71,7 +71,7 @@ export default class Cell extends Vue {
   }
 
   /**
-   * Called when the user clicks on this cell. 
+   * Called when the user clicks on this cell.
    * Emits the 'clickedOnBomb' event if this is a bomb, or the 'cell-click' event otherwise
    */
   public onCellClick() {
@@ -98,7 +98,7 @@ export default class Cell extends Vue {
   }
 
   /**
-   * Gets a value indicating whether this cell has been flagged by the user 
+   * Gets a value indicating whether this cell has been flagged by the user
    * @returns A value indicating whether this cell has been flagged by the user
    */
   public getFlag(): boolean {
@@ -111,23 +111,23 @@ export default class Cell extends Vue {
   public displayValue() {
     this.isDisplayingValue = true;
   }
-  
+
   /**
    * Displays the information store in this cell in cheat mode.
    */
   public cheatOn() {
     this.isDisplayingValue  = true;
   }
-  
+
   /**
    * Change this cell back to what it is when the cheat mode off.
    */
   public cheatOff() {
     this.isDisplayingValue  = this.isRevealed;
   }
-  
-  
-  
+
+
+
 }
 </script>
 <style scoped>
