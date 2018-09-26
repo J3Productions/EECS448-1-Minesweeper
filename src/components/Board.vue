@@ -222,9 +222,29 @@ export default class Board extends Vue {
         board[i][j].y = i;
         board[i][j].isDisplayingValue = false;
         board[i][j].isFlag = false;
+        //This variable is for Cheat mode.
+        board[i][j].isRevealed = false;
       }
     }
     return board;
+  }
+  
+  private cheatModeOn()
+  {
+      for(let i = 0; i < this.ySize; i++) {
+      for(let j = 0; j < this.xSize; j++) {
+        this.board[i][j].cheatOn();
+      }
+    }
+  }
+  
+  private cheatModeOff()
+  {
+      for(let i = 0; i < this.ySize; i++) {
+      for(let j = 0; j < this.xSize; j++) {
+        this.board[i][j].cheatOff();
+      }
+    }
   }
 
   /**

@@ -42,6 +42,11 @@ export default class Cell extends Vue {
    * Indicates whether this cell should display its value (the number of adjacent bombs)
    */
   @Prop() isDisplayingValue!: boolean;
+  
+  /**
+   * When this variable change to true 
+   */
+  @Prop() isRevealed!: boolean;
 
   /**
    * Gets a value indicating whether a flag can currently be placed
@@ -106,6 +111,23 @@ export default class Cell extends Vue {
   public displayValue() {
     this.isDisplayingValue = true;
   }
+  
+  /**
+   * Displays the information store in this cell in cheat mode.
+   */
+  public cheatOn() {
+    this.isDisplayingValue  = true;
+  }
+  
+  /**
+   * Change this cell back to what it is when the cheat mode off.
+   */
+  public cheatOff() {
+    this.isDisplayingValue  = this.isRevealed;
+  }
+  
+  
+  
 }
 </script>
 <style scoped>
