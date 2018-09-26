@@ -1,20 +1,20 @@
 <template>
   <div>
-    <p id="header">Minesweeper</p>
+    <p id="header">Minesweeper!</p>
     <div id="config-wrapper">
       <div id="config">
         <table>
           <tr>
             <td>Width: <span class="glyphicon glyphicon-house"></span></td>
-            <td><input v-model="width" type="number"/></td>
+            <td><input v-model="width" type="number" value="0" min="2" max="20"/></td>
           </tr>
           <tr>
             <td>Height:</td>
-            <td><input v-model="height" type="number"/></td>
+            <td><input v-model="height" type="number" value="0" min="2" max="20"/></td>
           </tr>
           <tr>
             <td>Bombs:</td>
-            <td><input v-model="bombs" type="number"/></td>
+            <td><input v-model="bombs" type="number" value="0" min="1" max="399"/></td>
           </tr>
         </table>
         <p><input type="button" @click="submit" value="Start Game"/></p>
@@ -137,14 +137,14 @@ export default class ConfigPage extends Vue {
     this.heightError = '';
     this.bombError = '';
 
-    if (this.width < 2 || this.width > 20) {
+    if (this.width < 2 || this.width > 20 || this.width % 1 != 0) {
       invalid.push('Width');
-      this.widthError += 'Width must be between 2 and 20';
+      this.widthError += 'Width must be a whole number between 2 and 20';
 
     }
-    if (this.height < 2 || this.height > 20) {
+    if (this.height < 2 || this.height > 20 || this.height % 1 != 0) {
       invalid.push('Height');
-      this.heightError += 'Height must be between 2 and 20';
+      this.heightError += 'Height must be a whole number between 2 and 20';
     }
     if (this.bombs < 1) {
       invalid.push('Number of Bombs');
@@ -152,10 +152,10 @@ export default class ConfigPage extends Vue {
 
     }
 
-    else if(this.bombs > this.height * this.width - 1 && this.width > 1 && this.height > 1){
+    else if(this.bombs > this.height * this.width - 1 && this.width > 1 && this.height > 1 || this.bombs % 1 != 0){
       invalid.push('Number of Bombs');
       let max = this.height * this.width - 1;
-      this.bombError += `Number of Bombs must be between 1 and ${max}`
+      this.bombError += `Number of Bombs must be a whole number between 1 and ${max}`
     }
 
     if(invalid.length == 1){
