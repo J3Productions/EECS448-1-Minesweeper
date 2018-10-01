@@ -6,6 +6,13 @@
         <div class="cell value unselectable" v-if="isDisplayingValue && value > 0">
           {{ this.value }}
         </div>
+      
+      
+        <div class="cell value unselectable" v-if="isDisplayingValue && value === -1">
+          {{ this.bomb }}
+        </div>
+      
+        
         <div class="cell no-value unselectable" v-if="isDisplayingValue && value === 0">
           &nbsp;
         </div>
@@ -37,6 +44,12 @@ export default class Cell extends Vue {
    * The number of bombs adjacent to this cell, or -1 if this cell is a bomb
    */
   @Prop() value!: number;
+  
+  
+  /**
+  * The letter 'X' will represent the bomb.
+  */
+  @Prop() bomb!: string;
 
   /**
    * Indicates whether this cell should display its value (the number of adjacent bombs)
@@ -86,7 +99,11 @@ export default class Cell extends Vue {
    * @param {state} Indicates whether this cell should contain a bomb
    */
   public setBomb(state: boolean) {
-    if (state) this.value = -1;
+    if (state)
+    {
+      this.value = -1;
+      this.bomb = 'X';
+    }
   }
 
   /**
@@ -110,7 +127,7 @@ export default class Cell extends Vue {
    */
   public displayValue() {
     this.isDisplayingValue = true;
-    this.isReavealed = true;
+    this.isRevealed = true;
   }
 
   /**

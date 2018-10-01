@@ -8,7 +8,9 @@
         :x="x"
         :y="y"
         :value = "board[y][x].value"
+        :bomb = "board[y][x].bomb"
         :isDisplayingValue = "board[y][x].isDisplayingValue"
+        :isRevealed = "board[y][x].isRevealed"
         :getCanFlag = "getCanFlag"
         @cell-click="cellClick"
         @clickedOnBomb="gameOver = true"
@@ -16,6 +18,14 @@
         v-for="(cell, x) in row"
         :key="x"></cell>
     </div>
+      
+      
+    <div v-if="!gameOver && !gameWon">
+      <h6><button @click="goToCheatMode" class="button">Cheat Mode</button></h6>
+    </div>
+      
+      
+        
     <div v-if="gameOver">
       <h2>Game Over</h2>
       <h6><button @click="goToMenu" class="button">Menu</button></h6>
@@ -53,6 +63,11 @@ export default class Board extends Vue {
    * Indicates whether the game has been finished with a win
    */
   private gameWon = false;
+  
+  /**
+   * Indicates whether the cheat mode in on
+   */
+  private CheatOn = false;
 
   /**
    * The size of the board in the x dimension
@@ -105,6 +120,7 @@ export default class Board extends Vue {
   restartGame(){
     this.gameOver = false;
     this.gameWon = false;
+    this.CheatOn = false;
     var board = this.initializeCells([], this.xSize, this.ySize);
     Object.seal(this.board);
     board = this.genBombs(board, this.numBombs);
@@ -119,8 +135,36 @@ export default class Board extends Vue {
    */
   goToMenu(){
     this.gameOver = false
+    this.CheatOn = false
     this.$emit('goToMenu')
   }
+  
+  /**
+  * The function open or close the cheat mode.
+  */
+  goToCheatMode()
+  {
+    if(this.CheatOn == false)
+    {
+          this.CheatOn = true;
+          var cheatBoard = this.cheatModeOn(this.board, this.xSize, this.ySize);
+          Object.seal(this.board);
+          this.board = cheatBoard;
+    }
+    else if(this.CheatOn == true)
+    {
+          this.CheatOn = false;
+          var cheatBoard = this.cheatModeOff(this.board, this.xSize, this.ySize);
+          Object.seal(this.board);
+          this.board = cheatBoard;
+    }
+
+  }
+
+
+
+
+
 
   /**
    * Reveals the values of the proper cells starting from a given initial point
@@ -229,24 +273,56 @@ export default class Board extends Vue {
     return board;
   }
   
-  private cheatModeOn()
-  {
-      for(let i = 0; i < this.ySize; i++) {
-      for(let j = 0; j < this.xSize; j++) {
-        this.board[i][j].cheatOn();
+        
+
+  
+   /**
+   * Revealed all space to become cheat mode
+   * @param board The board in which is playing
+   * @param xSize The size of the board in the x dimension
+   * @param ySize The size of the board in the y dimension
+   * @returns A board of the given size containing open cells
+   */
+  private cheatModeOn(
+    board: Cell[][],
+    xSize: number,
+    ySize: number
+  ): Cell[][] {
+    for (let i = 0; i < ySize; i++) {
+      for (let j = 0; j < xSize; j++) {
+        board[i][j].cheatOn();
       }
     }
+    return board;
   }
   
-  private cheatModeOff()
-  {
-      for(let i = 0; i < this.ySize; i++) {
-      for(let j = 0; j < this.xSize; j++) {
-        this.board[i][j].cheatOff();
+        
+   /**
+   * Close all the unrevealed spave to quit cheat mode
+   * @param board The board in which is playing.
+   * @param xSize The size of the board in the x dimension
+   * @param ySize The size of the board in the y dimension
+   * @returns A board of the given size containing original cells
+   */
+  private cheatModeOff(
+    board: Cell[][],
+    xSize: number,
+    ySize: number
+  ): Cell[][] {
+    for (let i = 0; i < ySize; i++) {
+      for (let j = 0; j < xSize; j++) {
+        board[i][j].cheatOff();
       }
     }
+    return board;
   }
 
+
+        
+        
+        
+        
+        
   /**
    * Computes the values associated with all cells in the game board
    */
