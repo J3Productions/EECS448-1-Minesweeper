@@ -7,6 +7,7 @@
       v-bind:xSize="boardWidth"
       v-bind:ySize="boardHeight"
       v-bind:numBombs="boardBombs"/>
+    
   </div>
 </template>
 

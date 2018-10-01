@@ -6,6 +6,13 @@
         <div class="cell value unselectable" v-if="isDisplayingValue && value > 0">
           {{ this.value }}
         </div>
+      
+      
+        <div class="cell value unselectable" v-if="isDisplayingValue && value === -1">
+          {{ this.bomb }}
+        </div>
+      
+        
         <div class="cell no-value unselectable" v-if="isDisplayingValue && value === 0">
           &nbsp;
         </div>
@@ -37,11 +44,22 @@ export default class Cell extends Vue {
    * The number of bombs adjacent to this cell, or -1 if this cell is a bomb
    */
   @Prop() value!: number;
+  
+  
+  /**
+  * The letter 'X' will represent the bomb.
+  */
+  @Prop() bomb!: string;
 
   /**
    * Indicates whether this cell should display its value (the number of adjacent bombs)
    */
   @Prop() isDisplayingValue!: boolean;
+
+  /**
+   * This holds the value of isDisplayingValue while all isDisplayingValue changes to true in cheet mode. After cheet mode, isDisplayingValue is changed back to isRevealed.
+   */
+  @Prop() isRevealed!: boolean;
 
   /**
    * Gets a value indicating whether a flag can currently be placed
@@ -66,7 +84,7 @@ export default class Cell extends Vue {
   }
 
   /**
-   * Called when the user clicks on this cell. 
+   * Called when the user clicks on this cell.
    * Emits the 'clickedOnBomb' event if this is a bomb, or the 'cell-click' event otherwise
    */
   public onCellClick() {
@@ -81,7 +99,11 @@ export default class Cell extends Vue {
    * @param {state} Indicates whether this cell should contain a bomb
    */
   public setBomb(state: boolean) {
-    if (state) this.value = -1;
+    if (state)
+    {
+      this.value = -1;
+      this.bomb = 'X';
+    }
   }
 
   /**
@@ -93,7 +115,7 @@ export default class Cell extends Vue {
   }
 
   /**
-   * Gets a value indicating whether this cell has been flagged by the user 
+   * Gets a value indicating whether this cell has been flagged by the user
    * @returns A value indicating whether this cell has been flagged by the user
    */
   public getFlag(): boolean {
@@ -105,7 +127,25 @@ export default class Cell extends Vue {
    */
   public displayValue() {
     this.isDisplayingValue = true;
+    this.isRevealed = true;
   }
+
+  /**
+   * Displays the information store in this cell in cheat mode.
+   */
+  public cheatOn() {
+    this.isDisplayingValue  = true;
+  }
+
+  /**
+   * Change this cell back to what it is when the cheat mode off.
+   */
+  public cheatOff() {
+    this.isDisplayingValue  = this.isRevealed;
+  }
+
+
+
 }
 </script>
 <style scoped>
