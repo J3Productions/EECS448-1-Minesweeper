@@ -1,10 +1,10 @@
 <template>
   <div>
-    <div class="row" v-if="!gameOver && !gameWon"><span>Right click to flag</span></div>
-    <div class="row" v-if="!gameOver && !gameWon"><span>Time: {{ timer }}</span></div>
+    <div class="row" v-if="!gameOver && !gameWon && timer >= 1"><span>Right click to flag</span></div>
+    <div class="row" v-if="!gameOver && !gameWon && timer >= 1"><span>Time: {{ timer }}</span></div>
     <p>{{ errorMsg }}</p>
-    <br v-if="!gameOver">
-    <div class="board-row" v-for="(row, y) in this.board" v-bind:key="y" v-if="!gameOver && !gameWon">
+    <br v-if="!gameOver && timer >= 1">
+    <div class="board-row" v-for="(row, y) in this.board" v-bind:key="y" v-if="!gameOver && !gameWon && timer >= 1">
         <cell
         :x="x"
         :y="y"
@@ -21,13 +21,13 @@
     </div>
       
       
-    <div v-if="!gameOver && !gameWon">
+    <div v-if="!gameOver && !gameWon && timer >= 1">
       <h6><button @click="goToCheatMode" class="button">Cheat Mode</button></h6>
     </div>
       
       
         
-    <div v-if="gameOver">
+    <div v-if="(gameOver || timer < 1) && !gameWon">
       <h2>Game Over</h2>
       <h6><button @click="goToMenu" class="button">Menu</button></h6>
       <h6><button @click="restartGame" class="button">Restart Game</button></h6>
@@ -111,7 +111,7 @@ export default class Board extends Vue {
     this.board = board;
     this.computeValues();
     //Here's where a formula for calculating the time left would go if we do the countdown timer path
-    this.timer = 100 + 5 * (this.xSize * this.ySize);
+    this.timer = 5 * (this.xSize * this.ySize);
     setInterval(() => this.timer--, 1000);
   }
 
@@ -137,6 +137,7 @@ export default class Board extends Vue {
     this.computeValues();
     this.flagCount = 0;
     this.errorMsg = '';
+    this.timer = 5 * (this.xSize * this.ySize);
   }
 
   /**
