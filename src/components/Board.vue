@@ -28,12 +28,15 @@
       
         
     <div v-if="(gameOver || timer < 1) && !gameWon">
-      <h2>Game Over</h2>
+      <h2>Game Over!</h2>
+      <div class="row" v-if="gameOver"><span>You clicked on a mine!</span></div>
+      <div class="row" v-if="timer < 1 && !gameOver"><span>You ran out of time!</span></div>
       <h6><button @click="goToMenu" class="button">Menu</button></h6>
       <h6><button @click="restartGame" class="button">Restart Game</button></h6>
     </div>
     <div v-if="gameWon">
-      <h2>You Won</h2>
+      <h2>You Won!</h2>
+      <div class="row"><span>You finished with {{ score }} seconds to spare!</span></div>
       <h6><button @click="goToMenu" class="button">Menu</button></h6>
       <h6><button @click="restartGame" class="button">New Game</button></h6>
     </div> 
@@ -99,6 +102,11 @@ export default class Board extends Vue {
    * The time taken to complete the game/the time left to complete the game
    */
   private timer: number = 0;
+
+  /**
+   * The final time taken to clear the board
+   */
+  private score: number = 0;
 
   /**
    * Called when the board is created
@@ -397,6 +405,7 @@ export default class Board extends Vue {
       }
     }
     if(correct == this.numBombs){
+      this.score = this.timer;
       return(true);
     }
     else{
