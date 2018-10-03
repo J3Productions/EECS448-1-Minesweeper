@@ -1,6 +1,7 @@
 <template>
   <div>
     <div class="row" v-if="!gameOver && !gameWon"><span>Right click to flag</span></div>
+    <div class="row" v-if="!gameOver && !gameWon"><span>Time: {{ timer }}</span></div>
     <p>{{ errorMsg }}</p>
     <br v-if="!gameOver">
     <div class="board-row" v-for="(row, y) in this.board" v-bind:key="y" v-if="!gameOver && !gameWon">
@@ -95,6 +96,11 @@ export default class Board extends Vue {
   private flagCount: number = 0;
 
   /**
+   * The time taken to complete the game/the time left to complete the game
+   */
+  private timer: number = 0;
+
+  /**
    * Called when the board is created
    */
   public created() {
@@ -104,6 +110,9 @@ export default class Board extends Vue {
     board = this.genBombs(board, this.numBombs);
     this.board = board;
     this.computeValues();
+    //Here's where a formula for calculating the time left would go if we do the countdown timer path
+    this.timer = 100 + 5 * (this.xSize * this.ySize);
+    setInterval(() => this.timer--, 1000);
   }
 
   /**
@@ -142,8 +151,7 @@ export default class Board extends Vue {
   /**
   * The function open or close the cheat mode.
   */
-  goToCheatMode()
-  {
+  goToCheatMode() {
     if(this.CheatOn == false)
     {
           this.CheatOn = true;
@@ -160,11 +168,6 @@ export default class Board extends Vue {
     }
 
   }
-
-
-
-
-
 
   /**
    * Reveals the values of the proper cells starting from a given initial point
