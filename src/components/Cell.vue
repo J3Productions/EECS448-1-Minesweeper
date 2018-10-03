@@ -8,7 +8,7 @@
         </div>
       
       
-        <div class="cell value unselectable" v-if="isDisplayingValue && value === -1">
+        <div class="cell bomb unselectable" v-if="isDisplayingValue && value === -1">
           {{ this.bomb }}
         </div>
       
@@ -161,6 +161,9 @@ export default class Cell extends Vue {
 }
 .value {
   background-color: blue;
+}
+.bomb {
+    background-color: black;
 }
 .no-value {
   background-color: white;
