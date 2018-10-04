@@ -6,7 +6,8 @@
       v-if="boardShowing"
       v-bind:xSize="boardWidth"
       v-bind:ySize="boardHeight"
-      v-bind:numBombs="boardBombs"/>
+      v-bind:numBombs="boardBombs"
+      v-bind:playerName="boardName"/>
     
   </div>
 </template>
@@ -27,6 +28,7 @@ export default class App extends Vue {
   private boardBombs: number = 0;
   private boardWidth: number = 0;
   private boardHeight: number = 0;
+  private boardName: string = "";
   
 
   showBoard($event: any){
@@ -36,6 +38,7 @@ export default class App extends Vue {
     vm.boardBombs = $event.bombs;
     vm.boardHeight = $event.height;
     vm.boardWidth = $event.width;
+    vm.boardName = $event.name;
   }
 }
 </script>

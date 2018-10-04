@@ -10,6 +10,7 @@
         :y="y"
         :value = "board[y][x].value"
         :bomb = "board[y][x].bomb"
+        :playerName ="board.name"
         :isDisplayingValue = "board[y][x].isDisplayingValue"
         :isRevealed = "board[y][x].isRevealed"
         :getCanFlag = "getCanFlag"
@@ -26,7 +27,6 @@
     </div>
       
       
-        
     <div v-if="(gameOver || timer < 1) && !gameWon">
       <h2>Game Over!</h2>
       <div class="row" v-if="gameOver"><span>You clicked on a mine!</span></div>
@@ -39,163 +39,274 @@
       <div class="row"><span>You finished with {{ score }} seconds to spare!</span></div>
       <h6><button @click="goToMenu" class="button">Menu</button></h6>
       <h6><button @click="restartGame" class="button">New Game</button></h6>
+    
+      <div class="board">
+        
+        <div>
+          {{this.createScoreName()}}
+          {{this.compareAndGen()}}
+        </div>
+        
+        <table class="scoreBoard" border ="1" align="center">
+          <tr>
+            <td colspan="2">Top 10 score!</td>
+          </tr>
+          <tr>
+            <th>Player name</th>
+            <th>Final score</th>
+          </tr>
+          <tr>
+            <th>1, {{nameArr[0]}}</th>
+            <th>{{scoreArr[0]}}</th>
+          </tr>
+          
+          <tr>
+            <th>2, {{nameArr[1]}}</th>
+            <th>{{scoreArr[1]}}</th>
+          </tr>
+          
+          <tr>
+            <th>3, {{nameArr[2]}}</th>
+            <th>{{scoreArr[2]}}</th>
+          </tr>
+          
+          <tr>
+            <th>4, {{nameArr[3]}}</th>
+            <th>{{scoreArr[3]}}</th>
+          </tr>
+          
+          <tr>
+            <th>5, {{nameArr[4]}}</th>
+            <th>{{scoreArr[4]}}</th>
+          </tr>
+          
+          <tr>
+            <th>6, {{nameArr[5]}}</th>
+            <th>{{scoreArr[5]}}</th>
+          </tr>
+          
+          <tr>
+            <th>7, {{nameArr[6]}}</th>
+            <th>{{scoreArr[6]}}</th>
+          </tr>
+          
+          <tr>
+            <th>8, {{nameArr[7]}}</th>
+            <th>{{scoreArr[7]}}</th>
+          </tr>
+          
+          <tr>
+            <th>9, {{nameArr[8]}}</th>
+            <th>{{scoreArr[8]}}</th>
+          </tr>
+          
+          <tr>
+            <th>10, {{nameArr[9]}}</th>
+            <th>{{scoreArr[9]}}</th>
+          </tr>
+        </table>  
+        
+      </div>
     </div> 
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop } from "vue-property-decorator";
-import Cell from "./Cell.vue";
+  import { Component, Vue, Prop } from "vue-property-decorator";
+  import Cell from "./Cell.vue";
 
-@Component({
+  @Component({
   components: {
-    Cell
+  Cell
   }
-})
-export default class Board extends Vue {
+  })
+  export default class Board extends Vue {
   /**
-   * The cells in the game board
-   */
+  * The cells in the game board
+  */
   private board: Cell[][] = [];
 
   /**
-   * Indicates whether the game has been finished with a loss
-   */
+  * Indicates whether the game has been finished with a loss
+  */
   private gameOver = false;
 
   /**
-   * Indicates whether the game has been finished with a win
-   */
+  * Indicates whether the game has been finished with a win
+  */
   private gameWon = false;
-  
+
   /**
-   * Indicates whether the cheat mode in on
-   */
+  * Indicates whether the cheat mode in on
+  */
   private CheatOn = false;
 
   /**
-   * The size of the board in the x dimension
-   */
+  * The size of the board in the x dimension
+  */
   @Prop() private xSize!: any;
 
   /**
-   * The size of the board in the y dimension
-   */
+  * The size of the board in the y dimension
+  */
   @Prop() private ySize!: any;
 
   /**
-   * The number of bombs contained in the board
-   */
+  * The number of bombs contained in the board
+  */
   @Prop() private numBombs!: any;
+  
+  /**
+  * Player name.
+  */
+  @Prop() private playerName!: any;
 
   /**
-   * The error message to display to the user, if applicable
-   */
+  * The error message to display to the user, if applicable
+  */
   private errorMsg: string = '';
 
   /**
-   * The number of flags currently placed on the board
-   */
+  * The number of flags currently placed on the board
+  */
   private flagCount: number = 0;
 
   /**
-   * The time taken to complete the game/the time left to complete the game
-   */
+  * The time taken to complete the game/the time left to complete the game
+  */
   private timer: number = 0;
 
   /**
-   * The final time taken to clear the board
-   */
+  * The final time taken to clear the board
+  */
   private score: number = 0;
+  
+  /**
+  * Array save the top 10 score.
+  */
+  private scoreArr: number[] = [0];
+  
+  /**
+  * Array save the top 10 name.
+  */
+  private nameArr: string[] = [" "];
+  
+
+
 
   /**
-   * Called when the board is created
-   */
+  * fill the Arrays that store the top 10 names and scores.
+  */
+  public createScoreName()
+  {
+    this.scoreArr = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    this.nameArr = [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "];
+  }
+  
+  /**
+  * test the new score is bigger than the old one.
+  */
+  public compareAndGen()
+ {
+    for(var i = 0; i < 10; i++)
+    {
+      if(this.score > this.scoreArr[i])
+      {
+        this.scoreArr.splice(i, 0, this.score); 
+        this.nameArr.splice(i, 0, this.playerName); 
+        break;
+      }
+    }
+ }    
+
+  /**
+  * Called when the board is created
+  */
   public created() {
-    console.log('creating board')
-    var board = this.initializeCells([], this.xSize, this.ySize);
-    Object.seal(this.board);
-    board = this.genBombs(board, this.numBombs);
-    this.board = board;
-    this.computeValues();
-    //Here's where a formula for calculating the time left would go if we do the countdown timer path
-    this.timer = 5 * (this.xSize * this.ySize);
-    setInterval(() => this.timer--, 1000);
+  console.log('creating board')
+  var board = this.initializeCells([], this.xSize, this.ySize);
+  Object.seal(this.board);
+  board = this.genBombs(board, this.numBombs);
+  this.board = board;
+  this.computeValues();
+  //Here's where a formula for calculating the time left would go if we do the countdown timer path
+  this.timer = 5 * (this.xSize * this.ySize);
+  setInterval(() => this.timer--, 1000);
   }
 
   /**
-   * Called when the game ends in a loss
-   */
+  * Called when the game ends in a loss
+  */
   private onGameOver(){
-    this.gameOver = true;
-    this.errorMsg = '';
-  }
-  
-  /**
-   * Reinitializes the game with a new game board using the same parameters
-   */
-  restartGame(){
-    this.gameOver = false;
-    this.gameWon = false;
-    this.CheatOn = false;
-    var board = this.initializeCells([], this.xSize, this.ySize);
-    Object.seal(this.board);
-    board = this.genBombs(board, this.numBombs);
-    this.board = board;
-    this.computeValues();
-    this.flagCount = 0;
-    this.errorMsg = '';
-    this.timer = 5 * (this.xSize * this.ySize);
+  this.gameOver = true;
+  this.errorMsg = '';
   }
 
   /**
-   * Emits the 'goToMenu' event, indicating that the UI should return to the input menu
-   */
-  goToMenu(){
-    this.gameOver = false
-    this.CheatOn = false
-    this.$emit('goToMenu')
+  * Reinitializes the game with a new game board using the same parameters
+  */
+  restartGame(){
+  this.gameOver = false;
+  this.gameWon = false;
+  this.CheatOn = false;
+  var board = this.initializeCells([], this.xSize, this.ySize);
+  Object.seal(this.board);
+  board = this.genBombs(board, this.numBombs);
+  this.board = board;
+  this.computeValues();
+  this.flagCount = 0;
+  this.errorMsg = '';
+  this.timer = 5 * (this.xSize * this.ySize);
   }
-  
+
+  /**
+  * Emits the 'goToMenu' event, indicating that the UI should return to the input menu
+  */
+  goToMenu(){
+  this.gameOver = false
+  this.CheatOn = false
+  this.$emit('goToMenu')
+  }
+
   /**
   * The function open or close the cheat mode.
   */
   goToCheatMode() {
-    if(this.CheatOn == false)
-    {
-          this.CheatOn = true;
-          var cheatBoard = this.cheatModeOn(this.board, this.xSize, this.ySize);
-          Object.seal(this.board);
-          this.board = cheatBoard;
-    }
-    else if(this.CheatOn == true)
-    {
-          this.CheatOn = false;
-          var cheatBoard = this.cheatModeOff(this.board, this.xSize, this.ySize);
-          Object.seal(this.board);
-          this.board = cheatBoard;
-    }
+  if(this.CheatOn == false)
+  {
+  this.CheatOn = true;
+  var cheatBoard = this.cheatModeOn(this.board, this.xSize, this.ySize);
+  Object.seal(this.board);
+  this.board = cheatBoard;
+  }
+  else if(this.CheatOn == true)
+  {
+  this.CheatOn = false;
+  var cheatBoard = this.cheatModeOff(this.board, this.xSize, this.ySize);
+  Object.seal(this.board);
+  this.board = cheatBoard;
+  }
 
   }
 
   /**
-   * Reveals the values of the proper cells starting from a given initial point
-   * @param initX The x coordinate of the initial point
-   * @param initY The y coordinate of the initial point
-   */
+  * Reveals the values of the proper cells starting from a given initial point
+  * @param initX The x coordinate of the initial point
+  * @param initY The y coordinate of the initial point
+  */
   public recSearch(initX: number, initY: number){
-    this.recHelper(initX, initY);
+  this.recHelper(initX, initY);
   }
 
   /**
-   * Gets the number of bombs that are adjacent to a cell, or -1 if the cell is a bomb
-   * @param xPos The x coordinate of the cell to use
-   * @param yPos The y coordinate of the cell to use
-   * @returns The number of bombs adjacent to the cell at the given coordinates
-   */
+  * Gets the number of bombs that are adjacent to a cell, or -1 if the cell is a bomb
+  * @param xPos The x coordinate of the cell to use
+  * @param yPos The y coordinate of the cell to use
+  * @returns The number of bombs adjacent to the cell at the given coordinates
+  */
   private checkAdjacent(xPos: number, yPos: number): number {
-    let count = 0;
-    if(this.isInBoard(xPos + 1, yPos + 1) && this.board[yPos + 1][xPos + 1].getBomb()){
+  let count = 0;
+  if(this.isInBoard(xPos + 1, yPos + 1) && this.board[yPos + 1][xPos + 1].getBomb()){
       count = count + 1;
     }
     if(this.isInBoard(xPos + 1, yPos) && this.board[yPos][xPos + 1].getBomb()){
@@ -484,5 +595,13 @@ table {
     text-decoration: none;
     display: inline-block;
     font-size: 16px;
+}
+div.board
+{
+  color: black;
+}
+table.scoreBoard
+{
+    background-color: white;
 }
 </style>

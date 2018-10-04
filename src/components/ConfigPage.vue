@@ -5,6 +5,10 @@
       <div id="config">
         <table>
           <tr>
+            <td>Player Name:</td>
+            <td><input v-model="name" type="text" value="0"/></td>
+          </tr>
+          <tr>
             <td>Width: <span class="glyphicon glyphicon-house"></span></td>
             <td><input v-model="width" type="number" value="0" min="2" max="20"/></td>
           </tr>
@@ -50,6 +54,11 @@ export default class ConfigPage extends Vue {
    * The number of bombs currently contained in the Bombs input
    */
   private bombs: number = 0;
+  
+  /**
+   * Player name. Using in score board.
+   */
+  private name: string = '';
 
   /**
    * The top-level error message shown if the user enters invalid input
@@ -85,7 +94,8 @@ export default class ConfigPage extends Vue {
       var obj =  {
         width: this.width,
         height: this.height,
-        bombs: this.bombs
+        bombs: this.bombs,
+        name: this.name
       }
       this.$emit('show-board', obj);
     }
