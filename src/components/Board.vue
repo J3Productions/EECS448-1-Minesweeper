@@ -4,9 +4,9 @@
     <div class="row" v-if="!gameOver && !gameWon && timer >= 1"><span>Time: {{ timer }}</span></div>
     <p>{{ errorMsg }}</p>
     <br v-if="!gameOver && timer >= 1">
-      
 
-      
+
+
     <div class="board-row" v-for="(row, y) in this.board" v-bind:key="y" v-if="!gameOver && !gameWon && timer >= 1">
         <cell
         :x="x"
@@ -23,13 +23,13 @@
         v-for="(cell, x) in row"
         :key="x"></cell>
     </div>
-      
-      
+
+
     <div v-if="!gameOver && !gameWon && timer >= 1">
       <h6><button @click="goToCheatMode" class="button">Cheat Mode</button></h6>
     </div>
-      
-      
+
+
     <div v-if="(gameOver || timer < 1) && !gameWon">
       <h2>Game Over!</h2>
       <div class="row" v-if="gameOver"><span>You clicked on a mine!</span></div>
@@ -41,11 +41,11 @@
       <h2>You Won!</h2>
       <div class="row"><span>You finished with {{ score }} seconds to spare!</span></div>
       <h6><button @click="goToMenu" class="button">Menu</button></h6>
-      <h6><button @click="restartGame" class="button">New Game</button></h6> 
+      <h6><button @click="restartGame" class="button">New Game</button></h6>
       <h6><button @click="openBoard" class="button">Look at the score board</button></h6>
-    
+
       <div class="board" v-if="swBoard">
-        
+
         <table class="scoreBoard" border ="1" align="center">
           <tr>
             <td colspan="2">Top 10 score!</td>
@@ -58,56 +58,56 @@
             <th>1, {{nameArr[0]}}</th>
             <th>{{scoreArr[0]}}</th>
           </tr>
-          
+
           <tr>
             <th>2, {{nameArr[1]}}</th>
             <th>{{scoreArr[1]}}</th>
           </tr>
-          
+
           <tr>
             <th>3, {{nameArr[2]}}</th>
             <th>{{scoreArr[2]}}</th>
           </tr>
-          
+
           <tr>
             <th>4, {{nameArr[3]}}</th>
             <th>{{scoreArr[3]}}</th>
           </tr>
-          
+
           <tr>
             <th>5, {{nameArr[4]}}</th>
             <th>{{scoreArr[4]}}</th>
           </tr>
-          
+
           <tr>
             <th>6, {{nameArr[5]}}</th>
             <th>{{scoreArr[5]}}</th>
           </tr>
-          
+
           <tr>
             <th>7, {{nameArr[6]}}</th>
             <th>{{scoreArr[6]}}</th>
           </tr>
-          
+
           <tr>
             <th>8, {{nameArr[7]}}</th>
             <th>{{scoreArr[7]}}</th>
           </tr>
-          
+
           <tr>
             <th>9, {{nameArr[8]}}</th>
             <th>{{scoreArr[8]}}</th>
           </tr>
-          
+
           <tr>
             <th>10, {{nameArr[9]}}</th>
             <th>{{scoreArr[9]}}</th>
           </tr>
-        </table>  
-        
+        </table>
+
       </div>
-    </div> 
-      
+    </div>
+
   </div>
 </template>
 
@@ -135,7 +135,7 @@
   * Indicates whether the game has been finished with a win
   */
   private gameWon = false;
-  
+
   /**
   * Indicate the scoreboard shows or not.
   */
@@ -160,7 +160,7 @@
   * The number of bombs contained in the board
   */
   @Prop() private numBombs!: any;
-  
+
   /**
   * Player name.
   */
@@ -185,17 +185,17 @@
   * The final time taken to clear the board
   */
   private score: number = 0;
-  
+
   /**
   * Array save the top 10 score.
   */
   private scoreArr: number[] = [0];
-  
+
   /**
   * Array save the top 10 name.
   */
   private nameArr: string[] = [" "];
-  
+
 
   /**
   * trigger to open board.
@@ -207,7 +207,7 @@
   }
 
 
-  
+
   /**
   * test the new score is bigger than the old one.
   */
@@ -217,25 +217,25 @@
     {
     var scoreStr = sessionStorage.scoreArr;
     this.scoreArr = JSON.parse(scoreStr);
-    
+
     var nameStr = sessionStorage.nameArr;
     this.nameArr = JSON.parse(nameStr);
-    
+
     for(var i = 0; i < 10; i++)
     {
       if(this.score > this.scoreArr[i])
       {
         this.scoreArr.pop();
         this.nameArr.pop();
-        this.scoreArr.splice(i, 0, this.score); 
-        this.nameArr.splice(i, 0, this.playerName); 
-        
+        this.scoreArr.splice(i, 0, this.score);
+        this.nameArr.splice(i, 0, this.playerName);
+
         scoreStr = JSON.stringify(this.scoreArr);
         sessionStorage.scoreArr = scoreStr;
-        
+
         nameStr = JSON.stringify(this.nameArr);
         sessionStorage.nameArr = nameStr;
-        
+
         break;
       }
     }
@@ -244,7 +244,7 @@
     {
       console.log("Sorry, your browser does not support we storage...");
     }
- }    
+ }
 
   /**
   * Called when the board is created
@@ -257,7 +257,7 @@
   this.board = board;
   this.computeValues();
   //Here's where a formula for calculating the time left would go if we do the countdown timer path
-  this.timer = 5 * (this.xSize * this.ySize);
+  this.timer = 2 * (this.xSize * this.ySize);
   setInterval(() => this.timer--, 1000);
   }
 
@@ -424,10 +424,10 @@
     }
     return board;
   }
-  
-        
 
-  
+
+
+
    /**
    * Revealed all space to become cheat mode
    * @param board The board in which is playing
@@ -447,8 +447,8 @@
     }
     return board;
   }
-  
-        
+
+
    /**
    * Close all the unrevealed spave to quit cheat mode
    * @param board The board in which is playing.
@@ -470,11 +470,11 @@
   }
 
 
-        
-        
-        
-        
-        
+
+
+
+
+
   /**
    * Computes the values associated with all cells in the game board
    */
@@ -507,7 +507,7 @@
       this.flagCount = this.flagCount + 1;
 
     }
-    this.board[coord.y][coord.x].isFlag = !this.board[coord.y][coord.x].isFlag;  
+    this.board[coord.y][coord.x].isFlag = !this.board[coord.y][coord.x].isFlag;
     if(this.checkAllFlagged()){
       this.gameWon = true;
       this.board[coord.y][coord.x].isFlag = false;
