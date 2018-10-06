@@ -4,6 +4,9 @@
     <div class="row" v-if="!gameOver && !gameWon && timer >= 1"><span>Time: {{ timer }}</span></div>
     <p>{{ errorMsg }}</p>
     <br v-if="!gameOver && timer >= 1">
+      
+
+      
     <div class="board-row" v-for="(row, y) in this.board" v-bind:key="y" v-if="!gameOver && !gameWon && timer >= 1">
         <cell
         :x="x"
@@ -38,14 +41,10 @@
       <h2>You Won!</h2>
       <div class="row"><span>You finished with {{ score }} seconds to spare!</span></div>
       <h6><button @click="goToMenu" class="button">Menu</button></h6>
-      <h6><button @click="restartGame" class="button">New Game</button></h6>
+      <h6><button @click="restartGame" class="button">New Game</button></h6> 
+      <h6><button @click="openBoard" class="button">Look at the score board</button></h6>
     
-      <div class="board">
-        
-        <div>
-          {{this.createScoreName()}}
-          {{this.compareAndGen()}}
-        </div>
+      <div class="board" v-if="swBoard">
         
         <table class="scoreBoard" border ="1" align="center">
           <tr>
@@ -108,6 +107,7 @@
         
       </div>
     </div> 
+      
   </div>
 </template>
 
@@ -135,6 +135,11 @@
   * Indicates whether the game has been finished with a win
   */
   private gameWon = false;
+  
+  /**
+  * Indicate the scoreboard shows or not.
+  */
+  private swBoard = false;
 
   /**
   * Indicates whether the cheat mode in on
@@ -192,30 +197,52 @@
   private nameArr: string[] = [" "];
   
 
-
-
   /**
-  * fill the Arrays that store the top 10 names and scores.
+  * trigger to open board.
   */
-  public createScoreName()
+  public openBoard()
   {
-    this.scoreArr = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-    this.nameArr = [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "];
+    this.swBoard = true;
+    this.compareAndGen();
   }
+
+
   
   /**
   * test the new score is bigger than the old one.
   */
   public compareAndGen()
  {
+ if(typeof(Storage) !== "undefined")
+    {
+    var scoreStr = sessionStorage.scoreArr;
+    this.scoreArr = JSON.parse(scoreStr);
+    
+    var nameStr = sessionStorage.nameArr;
+    this.nameArr = JSON.parse(nameStr);
+    
     for(var i = 0; i < 10; i++)
     {
       if(this.score > this.scoreArr[i])
       {
+        this.scoreArr.pop();
+        this.nameArr.pop();
         this.scoreArr.splice(i, 0, this.score); 
         this.nameArr.splice(i, 0, this.playerName); 
+        
+        scoreStr = JSON.stringify(this.scoreArr);
+        sessionStorage.scoreArr = scoreStr;
+        
+        nameStr = JSON.stringify(this.nameArr);
+        sessionStorage.nameArr = nameStr;
+        
         break;
       }
+    }
+   }
+   else
+    {
+      console.log("Sorry, your browser does not support we storage...");
     }
  }    
 
@@ -249,6 +276,7 @@
   this.gameOver = false;
   this.gameWon = false;
   this.CheatOn = false;
+  this.swBoard = false;
   var board = this.initializeCells([], this.xSize, this.ySize);
   Object.seal(this.board);
   board = this.genBombs(board, this.numBombs);
@@ -265,6 +293,7 @@
   goToMenu(){
   this.gameOver = false
   this.CheatOn = false
+  this.swBoard = false;
   this.$emit('goToMenu')
   }
 
