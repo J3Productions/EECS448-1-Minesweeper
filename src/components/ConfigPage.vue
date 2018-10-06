@@ -22,6 +22,7 @@
           </tr>
         </table>
         <p><input type="button" @click="submit" value="Start Game"/></p>
+        <p><input type="button" @click="resetBoard" value="reset the Score Board"/></p>
       </div>
       <p>{{ errorMsg}}</p>
       <p>{{ heightError}}</p>
@@ -94,8 +95,7 @@ export default class ConfigPage extends Vue {
   {
     if(typeof(Storage) !== "undefined")
     {
-      var test = JSON.parse(sessionStorage.scoreArr);
-      if(sessionStorage.scoreArr == "undefined")
+      if(sessionStorage.scoreArr !== "undefined")
       {
         var scoreArr = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
         var scoreStr = JSON.stringify(scoreArr);
@@ -117,6 +117,15 @@ export default class ConfigPage extends Vue {
     }
   }
   
+  
+  /**
+  * This function reset the score Board.
+  */
+  public resetBoard()
+  {
+    sessionStorage.clear();
+    console.log("Score board clear!");
+  }
   
 
   /**
