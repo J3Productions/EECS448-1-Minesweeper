@@ -95,11 +95,7 @@ export default class ConfigPage extends Vue {
     if(typeof(Storage) !== "undefined")
     {
       var test = JSON.parse(sessionStorage.scoreArr);
-      if(test[0] > 0)
-      {
-        console.log("Already have score!");
-      }
-      else
+      if(sessionStorage.scoreArr == "undefined")
       {
         var scoreArr = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
         var scoreStr = JSON.stringify(scoreArr);
@@ -109,6 +105,10 @@ export default class ConfigPage extends Vue {
         var nameStr = JSON.stringify(nameArr);
         sessionStorage.nameArr = nameStr;
         console.log("Score Board array created!")
+      }
+      else
+      {
+        console.log("Already have score!");
       }
     }
     else
