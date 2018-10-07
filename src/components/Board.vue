@@ -46,63 +46,50 @@
 
       <div class="board" v-if="swBoard">
 
+        <h3 style="color: white">Top 5 Scores!</h3>
         <table class="scoreBoard" border ="1" align="center">
           <tr>
-            <td colspan="2">Top 5 scores!</td>
+            <th>Rank</th>
+            <th>Name</th>
+            <th>Board Size</th>
+            <th>Clear Time</th>
+            <th>Date</th>
           </tr>
           <tr>
-            <th>Player name</th>
-            <th>Final score</th>
+            <td>1</td>
+            <td>{{ scoreArr[0].name }}</td>
+            <td>{{ scoreArr[0].size }}</td>
+            <td>{{ scoreArr[0].time }}</td>
+            <td>{{ scoreArr[0].date.getMonth() + 1 }}/{{ scoreArr[0].date.getDate() }}/{{ scoreArr[0].date.getFullYear() }}</td>
+          </tr>
+          <!-- Need to figure out how to handle the score when there's nothing there <tr>
+            <td>2</td>
+            <td>{{ scoreArr[1].name }}</td>
+            <td>{{ scoreArr[1].size }}</td>
+            <td>{{ scoreArr[1].time }}</td>
+            <td>{{ scoreArr[1].date.getMonth() + 1 }}/{{ scoreArr[1].date.getDate() }}/{{ scoreArr[1].date.getFullYear() }}</td>
           </tr>
           <tr>
-            <th>1, {{nameArr[0]}}</th>
-            <th>{{scoreArr[0]}}</th>
+            <td>3</td>
+            <td>{{ scoreArr[2].name }}</td>
+            <td>{{ scoreArr[2].size }}</td>
+            <td>{{ scoreArr[2].time }}</td>
+            <td>{{ scoreArr[2].date.getMonth() + 1 }}/{{ scoreArr[2].date.getDate() }}/{{ scoreArr[2].date.getFullYear() }}</td>
           </tr>
-
           <tr>
-            <th>2, {{nameArr[1]}}</th>
-            <th>{{scoreArr[1]}}</th>
+            <td>4</td>
+            <td>{{ scoreArr[3].name }}</td>
+            <td>{{ scoreArr[3].size }}</td>
+            <td>{{ scoreArr[3].time }}</td>
+            <td>{{ scoreArr[3].date.getMonth() + 1 }}/{{ scoreArr[3].date.getDate() }}/{{ scoreArr[3].date.getFullYear() }}</td>
           </tr>
-
           <tr>
-            <th>3, {{nameArr[2]}}</th>
-            <th>{{scoreArr[2]}}</th>
-          </tr>
-
-          <tr>
-            <th>4, {{nameArr[3]}}</th>
-            <th>{{scoreArr[3]}}</th>
-          </tr>
-
-          <tr>
-            <th>5, {{nameArr[4]}}</th>
-            <th>{{scoreArr[4]}}</th>
-          </tr>
-
-          <tr>
-            <th>6, {{nameArr[5]}}</th>
-            <th>{{scoreArr[5]}}</th>
-          </tr>
-
-          <tr>
-            <th>7, {{nameArr[6]}}</th>
-            <th>{{scoreArr[6]}}</th>
-          </tr>
-
-          <tr>
-            <th>8, {{nameArr[7]}}</th>
-            <th>{{scoreArr[7]}}</th>
-          </tr>
-
-          <tr>
-            <th>9, {{nameArr[8]}}</th>
-            <th>{{scoreArr[8]}}</th>
-          </tr>
-
-          <tr>
-            <th>10, {{nameArr[9]}}</th>
-            <th>{{scoreArr[9]}}</th>
-          </tr>
+            <td>5</td>
+            <td>{{ scoreArr[4].name }}</td>
+            <td>{{ scoreArr[4].size }}</td>
+            <td>{{ scoreArr[4].time }}</td>
+            <td>{{ scoreArr[4].date.getMonth() + 1 }}/{{ scoreArr[4].date.getDate() }}/{{ scoreArr[4].date.getFullYear() }}</td>
+          </tr>-->
         </table>
 
       </div>
@@ -256,7 +243,6 @@
           time: (3 * (this.xSize * this.ySize)) - this.score,
           date: new Date()
       };
-      console.log(scoreObj);
 
       for (let i = 0; i < 5; i++) {
           if (scoreObjArr[i] == null || scoreObj.time < scoreObjArr[i].time) {
