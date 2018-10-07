@@ -86,8 +86,8 @@ export default class ConfigPage extends Vue {
    */
   private error = false;
   
-  
-  
+
+
   /**
   * fill the Arrays that store the top 10 names and scores.
   */
@@ -100,7 +100,7 @@ export default class ConfigPage extends Vue {
         var scoreArr = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
         var scoreStr = JSON.stringify(scoreArr);
         sessionStorage.scoreArr = scoreStr;
-      
+
         var nameArr = [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "];
         var nameStr = JSON.stringify(nameArr);
         sessionStorage.nameArr = nameStr;
@@ -116,8 +116,8 @@ export default class ConfigPage extends Vue {
       console.log("Sorry, your browser does not support we storage...");
     }
   }
-  
-  
+
+
   /**
   * This function reset the score Board.
   */

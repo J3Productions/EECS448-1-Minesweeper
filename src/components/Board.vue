@@ -48,7 +48,7 @@
 
         <table class="scoreBoard" border ="1" align="center">
           <tr>
-            <td colspan="2">Top 10 score!</td>
+            <td colspan="2">Top 5 scores!</td>
           </tr>
           <tr>
             <th>Player name</th>
@@ -189,21 +189,14 @@
   /**
   * Array save the top 10 score.
   */
-  private scoreArr: number[] = [0];
-
-  /**
-  * Array save the top 10 name.
-  */
-  private nameArr: string[] = [" "];
+  private scoreArr: any[] = [];
 
 
   /**
   * trigger to open board.
   */
-  public openBoard()
-  {
+  public openBoard() {
     this.swBoard = true;
-    this.compareAndGen();
   }
 
 
@@ -211,40 +204,78 @@
   /**
   * test the new score is bigger than the old one.
   */
-  public compareAndGen()
- {
- if(typeof(Storage) !== "undefined")
-    {
-    var scoreStr = sessionStorage.scoreArr;
-    this.scoreArr = JSON.parse(scoreStr);
+  public retrieveScores() {
+    if(typeof(Storage) !== "undefined") {
+      var scoreStr = sessionStorage.scoreArr;
+      this.scoreArr = JSON.parse(scoreStr);
 
-    var nameStr = sessionStorage.nameArr;
-    this.nameArr = JSON.parse(nameStr);
+      var nameStr = sessionStorage.nameArr;
+      this.nameArr = JSON.parse(nameStr);
 
-    for(var i = 0; i < 10; i++)
-    {
-      if(this.score > this.scoreArr[i])
-      {
-        this.scoreArr.pop();
-        this.nameArr.pop();
-        this.scoreArr.splice(i, 0, this.score);
-        this.nameArr.splice(i, 0, this.playerName);
+      for(var i = 0; i < 10; i++) {
+        if(this.score > this.scoreArr[i]) {
+          this.scoreArr.pop();
+          this.nameArr.pop();
+          this.scoreArr.splice(i, 0, this.score);
+          this.nameArr.splice(i, 0, this.playerName);
 
-        scoreStr = JSON.stringify(this.scoreArr);
-        sessionStorage.scoreArr = scoreStr;
+          scoreStr = JSON.stringify(this.scoreArr);
+          sessionStorage.scoreArr = scoreStr;
 
-        nameStr = JSON.stringify(this.nameArr);
-        sessionStorage.nameArr = nameStr;
+          nameStr = JSON.stringify(this.nameArr);
+          sessionStorage.nameArr = nameStr;
 
-        break;
+          break;
+        }
       }
     }
-   }
-   else
-    {
+   else {
       console.log("Sorry, your browser does not support we storage...");
     }
  }
+
+  public sendScore() {
+      //String that is used for the key to store the score under
+      let keyString = "mines" + this.numBombs + "rank";
+
+      //Array that retrieves all the scores in JSON format
+      let scoreJSONArr = [];
+
+      //Array that stores all the scores in object format
+      let scoreObjArr = [];
+
+      for (let i = 0; i < 5; i++) {
+          scoreJSONArr[i] = localStorage.getItem(keyString.concat(i.toString()));
+          scoreObjArr[i] = JSON.parse(scoreJSONArr[i]);
+      }
+
+      let scoreObj = {
+          name: this.playerName,
+          size: this.xSize * this.ySize,
+          mines: this.numBombs,
+          time: (3 * (this.xSize * this.ySize)) - this.score,
+          date: new Date()
+      };
+      console.log(scoreObj);
+
+      for (let i = 0; i < 5; i++) {
+          if (scoreObjArr[i] == null || scoreObj.time < scoreObjArr[i].time) {
+              scoreObjArr.splice(i, 0, scoreObj);
+              break;
+          }
+      }
+
+      for (let i = 0; i < 5; i++) {
+          if (scoreObjArr[i] == null) {
+              scoreJSONArr[i] = null;
+          }
+          else {
+              scoreJSONArr[i] = JSON.stringify(scoreObjArr[i]);
+          }
+          localStorage.setItem(keyString.concat(i.toString()), scoreJSONArr[i]);
+      }
+      this.scoreArr = scoreObjArr;
+  }
 
   /**
   * Called when the board is created
@@ -257,7 +288,7 @@
   this.board = board;
   this.computeValues();
   //Here's where a formula for calculating the time left would go if we do the countdown timer path
-  this.timer = 2 * (this.xSize * this.ySize);
+  this.timer = 3 * (this.xSize * this.ySize);
   setInterval(() => this.timer--, 1000);
   }
 
@@ -284,7 +315,7 @@
   this.computeValues();
   this.flagCount = 0;
   this.errorMsg = '';
-  this.timer = 5 * (this.xSize * this.ySize);
+  this.timer = 3 * (this.xSize * this.ySize);
   }
 
   /**
@@ -512,6 +543,7 @@
       this.gameWon = true;
       this.board[coord.y][coord.x].isFlag = false;
       this.flagCount = 0;
+      this.sendScore();
     }
 
 
