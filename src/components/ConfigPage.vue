@@ -22,7 +22,6 @@
           </tr>
         </table>
         <p><input type="button" @click="submit" value="Start Game"/></p>
-        <p><input type="button" @click="resetBoard" value="reset the Score Board"/></p>
       </div>
       <p>{{ errorMsg}}</p>
       <p>{{ heightError}}</p>
@@ -85,48 +84,7 @@ export default class ConfigPage extends Vue {
    * Indicates whether the user entered invalid input
    */
   private error = false;
-  
 
-
-  /**
-  * fill the Arrays that store the top 10 names and scores.
-  */
-  public createScoreName()
-  {
-    if(typeof(Storage) !== "undefined")
-    {
-      if(sessionStorage.scoreArr !== "undefined")
-      {
-        var scoreArr = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        var scoreStr = JSON.stringify(scoreArr);
-        sessionStorage.scoreArr = scoreStr;
-
-        var nameArr = [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "];
-        var nameStr = JSON.stringify(nameArr);
-        sessionStorage.nameArr = nameStr;
-        console.log("Score Board array created!")
-      }
-      else
-      {
-        console.log("Already have score!");
-      }
-    }
-    else
-    {
-      console.log("Sorry, your browser does not support we storage...");
-    }
-  }
-
-
-  /**
-  * This function reset the score Board.
-  */
-  public resetBoard()
-  {
-    sessionStorage.clear();
-    console.log("Score board clear!");
-  }
-  
 
   /**
    * Processes user input and emits a 'show-board' event if the input is valid
@@ -140,7 +98,6 @@ export default class ConfigPage extends Vue {
         bombs: this.bombs,
         name: this.name
       }
-      this.createScoreName();
       this.$emit('show-board', obj);
     }
   }
