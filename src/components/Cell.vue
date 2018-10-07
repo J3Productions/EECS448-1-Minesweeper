@@ -16,7 +16,7 @@
         <div class="cell no-value unselectable" v-if="isDisplayingValue && value === 0">
           &nbsp;
         </div>
-        <div class="cell flag unselectable" v-if="isFlag" @click.right="onCellFlag">
+        <div class="cell flag unselectable" v-if="isFlag && !isDisplayingValue" @click.right="onCellFlag">
           &nbsp;
         </div>
     </span>
@@ -57,7 +57,7 @@ export default class Cell extends Vue {
   @Prop() isDisplayingValue!: boolean;
 
   /**
-   * This holds the value of isDisplayingValue while all isDisplayingValue changes to true in cheet mode. After cheet mode, isDisplayingValue is changed back to isRevealed.
+   * This holds the value of isDisplayingValue while all isDisplayingValue changes to true in cheet mode. After cheat mode, isDisplayingValue is changed back to isRevealed.
    */
   @Prop() isRevealed!: boolean;
 
@@ -135,6 +135,7 @@ export default class Cell extends Vue {
    */
   public cheatOn() {
     this.isDisplayingValue  = true;
+
   }
 
   /**
