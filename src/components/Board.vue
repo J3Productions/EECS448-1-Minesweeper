@@ -42,69 +42,50 @@
       <div class="row"><span>You finished with {{ score }} seconds to spare!</span></div>
       <h6><button @click="goToMenu" class="button">Menu</button></h6>
       <h6><button @click="restartGame" class="button">New Game</button></h6>
-      <h6><button @click="openBoard" class="button">Look at the score board</button></h6>
 
-      <div class="board" v-if="swBoard">
 
+      <div class="board">
+
+        <h3 style="color: white">Top 5 Scores!</h3>
         <table class="scoreBoard" border ="1" align="center">
           <tr>
-            <td colspan="2">Top 10 score!</td>
+            <th>Rank</th>
+            <th>Name</th>
+            <th>Board Size</th>
+            <th>Clear Time</th>
           </tr>
-          <tr>
-            <th>Player name</th>
-            <th>Final score</th>
+          <tr v-if="scoreArr[0] !== null">
+            <td>1</td>
+            <td>{{ scoreArr[0].name }}</td>
+            <td>{{ scoreArr[0].size }}</td>
+            <td>{{ scoreArr[0].time }}</td>
           </tr>
-          <tr>
-            <th>1, {{nameArr[0]}}</th>
-            <th>{{scoreArr[0]}}</th>
+          <tr v-if="scoreArr[1] !== null">
+            <td>2</td>
+            <td>{{ scoreArr[1].name }}</td>
+            <td>{{ scoreArr[1].size }}</td>
+            <td>{{ scoreArr[1].time }}</td>
           </tr>
-
-          <tr>
-            <th>2, {{nameArr[1]}}</th>
-            <th>{{scoreArr[1]}}</th>
+          <tr v-if="scoreArr[2] !== null">
+            <td>3</td>
+            <td>{{ scoreArr[2].name }}</td>
+            <td>{{ scoreArr[2].size }}</td>
+            <td>{{ scoreArr[2].time }}</td>
           </tr>
-
-          <tr>
-            <th>3, {{nameArr[2]}}</th>
-            <th>{{scoreArr[2]}}</th>
+          <tr v-if="scoreArr[3] !== null">
+            <td>4</td>
+            <td>{{ scoreArr[3].name }}</td>
+            <td>{{ scoreArr[3].size }}</td>
+            <td>{{ scoreArr[3].time }}</td>
           </tr>
-
-          <tr>
-            <th>4, {{nameArr[3]}}</th>
-            <th>{{scoreArr[3]}}</th>
-          </tr>
-
-          <tr>
-            <th>5, {{nameArr[4]}}</th>
-            <th>{{scoreArr[4]}}</th>
-          </tr>
-
-          <tr>
-            <th>6, {{nameArr[5]}}</th>
-            <th>{{scoreArr[5]}}</th>
-          </tr>
-
-          <tr>
-            <th>7, {{nameArr[6]}}</th>
-            <th>{{scoreArr[6]}}</th>
-          </tr>
-
-          <tr>
-            <th>8, {{nameArr[7]}}</th>
-            <th>{{scoreArr[7]}}</th>
-          </tr>
-
-          <tr>
-            <th>9, {{nameArr[8]}}</th>
-            <th>{{scoreArr[8]}}</th>
-          </tr>
-
-          <tr>
-            <th>10, {{nameArr[9]}}</th>
-            <th>{{scoreArr[9]}}</th>
+          <tr v-if="scoreArr[4] !== null">
+            <td>5</td>
+            <td>{{ scoreArr[4].name }}</td>
+            <td>{{ scoreArr[4].size }}</td>
+            <td>{{ scoreArr[4].time }}</td>
           </tr>
         </table>
-
+        <h6><button @click="resetBoard" class="button">Reset High Scores</button></h6>
       </div>
     </div>
 
@@ -187,133 +168,144 @@
   private score: number = 0;
 
   /**
-  * Array save the top 10 score.
+  * Array save the top 5 score.
   */
-  private scoreArr: number[] = [0];
+  private scoreArr: any[] = [];
 
   /**
-  * Array save the top 10 name.
+  * Clears all scores from memory
   */
-  private nameArr: string[] = [" "];
-
-
-  /**
-  * trigger to open board.
-  */
-  public openBoard()
-  {
-    this.swBoard = true;
-    this.compareAndGen();
+  public resetBoard() {
+      if(typeof(Storage) !== "undefined") {
+          localStorage.clear();
+          this.scoreArr = [null, null, null, null, null];
+          console.log("Score board clear!");
+      }
+      else {
+          console.log("Sorry, your browser does not support local storage...");
+      }
   }
 
-
-
   /**
-  * test the new score is bigger than the old one.
-  */
-  public compareAndGen()
- {
- if(typeof(Storage) !== "undefined")
-    {
-    var scoreStr = sessionStorage.scoreArr;
-    this.scoreArr = JSON.parse(scoreStr);
+   * Retrieves all the scores for the number of mines selected and inserts the current score into the list of scores, storing the current high score list in scoreArr
+   */
+  public sendScore() {
+      if(typeof(Storage) !== "undefined") {
+          //String that is used for the key to store the score under
+          let keyString = "mines" + this.numBombs + "rank";
 
-    var nameStr = sessionStorage.nameArr;
-    this.nameArr = JSON.parse(nameStr);
+          //Array that retrieves all the scores in JSON format
+          let scoreJSONArr = [];
 
-    for(var i = 0; i < 10; i++)
-    {
-      if(this.score > this.scoreArr[i])
-      {
-        this.scoreArr.pop();
-        this.nameArr.pop();
-        this.scoreArr.splice(i, 0, this.score);
-        this.nameArr.splice(i, 0, this.playerName);
+          //Array that stores all the scores in object format
+          let scoreObjArr = [];
 
-        scoreStr = JSON.stringify(this.scoreArr);
-        sessionStorage.scoreArr = scoreStr;
+          for (let i = 0; i < 5; i++) {
+              scoreJSONArr[i] = localStorage.getItem(keyString.concat(i.toString()));
+              scoreObjArr[i] = JSON.parse(scoreJSONArr[i]);
+          }
 
-        nameStr = JSON.stringify(this.nameArr);
-        sessionStorage.nameArr = nameStr;
+          let scoreObj = {
+              name: this.playerName,
+              size: this.xSize * this.ySize,
+              mines: this.numBombs,
+              time: (3 * (this.xSize * this.ySize)) - this.score,
+          };
 
-        break;
+          for (let i = 0; i < 5; i++) {
+              if (scoreObjArr[i] == null || scoreObj.time < scoreObjArr[i].time) {
+                  scoreObjArr.splice(i, 0, scoreObj);
+                  break;
+              }
+          }
+
+          this.numScores = 0;
+          for (let i = 0; i < 5; i++) {
+              if (scoreObjArr[i] == null) {
+                  scoreJSONArr[i] = null;
+              }
+              else {
+                  this.numScores++;
+                  scoreJSONArr[i] = JSON.stringify(scoreObjArr[i]);
+              }
+              localStorage.setItem(keyString.concat(i.toString()), scoreJSONArr[i]);
+          }
+          this.scoreArr = scoreObjArr;
       }
-    }
-   }
-   else
-    {
-      console.log("Sorry, your browser does not support we storage...");
-    }
- }
+      else {
+          console.log("Sorry, your browser does not support local storage...");
+      }
+
+  }
 
   /**
   * Called when the board is created
   */
   public created() {
-  console.log('creating board')
-  var board = this.initializeCells([], this.xSize, this.ySize);
-  Object.seal(this.board);
-  board = this.genBombs(board, this.numBombs);
-  this.board = board;
-  this.computeValues();
-  //Here's where a formula for calculating the time left would go if we do the countdown timer path
-  this.timer = 2 * (this.xSize * this.ySize);
-  setInterval(() => this.timer--, 1000);
+    console.log('creating board')
+    var board = this.initializeCells([], this.xSize, this.ySize);
+    Object.seal(this.board);
+    board = this.genBombs(board, this.numBombs);
+    this.board = board;
+    this.computeValues();
+    //Here's where a formula for calculating the time left would go if we do the countdown timer path
+    this.timer = 3 * (this.xSize * this.ySize);
+    setInterval(() => this.timer--, 1000);
   }
 
   /**
   * Called when the game ends in a loss
   */
   private onGameOver(){
-  this.gameOver = true;
-  this.errorMsg = '';
+    this.gameOver = true;
+    this.errorMsg = '';
   }
 
   /**
   * Reinitializes the game with a new game board using the same parameters
   */
   restartGame(){
-  this.gameOver = false;
-  this.gameWon = false;
-  this.CheatOn = false;
-  this.swBoard = false;
-  var board = this.initializeCells([], this.xSize, this.ySize);
-  Object.seal(this.board);
-  board = this.genBombs(board, this.numBombs);
-  this.board = board;
-  this.computeValues();
-  this.flagCount = 0;
-  this.errorMsg = '';
-  this.timer = 5 * (this.xSize * this.ySize);
+    this.gameOver = false;
+    this.gameWon = false;
+    this.CheatOn = false;
+    this.swBoard = false;
+    var board = this.initializeCells([], this.xSize, this.ySize);
+    Object.seal(this.board);
+    board = this.genBombs(board, this.numBombs);
+    this.board = board;
+    this.computeValues();
+    this.flagCount = 0;
+    this.errorMsg = '';
+    this.timer = 3 * (this.xSize * this.ySize);
   }
 
   /**
   * Emits the 'goToMenu' event, indicating that the UI should return to the input menu
   */
   goToMenu(){
-  this.gameOver = false
-  this.CheatOn = false
-  this.swBoard = false;
-  this.$emit('goToMenu')
+    this.gameOver = false
+    this.CheatOn = false
+    this.swBoard = false;
+    this.$emit('goToMenu')
   }
 
   /**
   * The function open or close the cheat mode.
   */
   goToCheatMode() {
-  if(this.CheatOn == false)
-  {
-  this.CheatOn = true;
-  var cheatBoard = this.cheatModeOn(this.board, this.xSize, this.ySize);
-  Object.seal(this.board);
-  this.board = cheatBoard;
-  }
-  else if(this.CheatOn == true)
-  {
-  this.CheatOn = false;
-  var cheatBoard = this.cheatModeOff(this.board, this.xSize, this.ySize);
-  Object.seal(this.board);
-  this.board = cheatBoard;
+    if(this.CheatOn == false)
+    {
+    this.CheatOn = true;
+    var cheatBoard = this.cheatModeOn(this.board, this.xSize, this.ySize);
+    Object.seal(this.board);
+    this.board = cheatBoard;
+    }
+    else if(this.CheatOn == true)
+    {
+    this.CheatOn = false;
+    var cheatBoard = this.cheatModeOff(this.board, this.xSize, this.ySize);
+    Object.seal(this.board);
+    this.board = cheatBoard;
   }
 
   }
@@ -324,7 +316,7 @@
   * @param initY The y coordinate of the initial point
   */
   public recSearch(initX: number, initY: number){
-  this.recHelper(initX, initY);
+    this.recHelper(initX, initY);
   }
 
   /**
@@ -334,8 +326,8 @@
   * @returns The number of bombs adjacent to the cell at the given coordinates
   */
   private checkAdjacent(xPos: number, yPos: number): number {
-  let count = 0;
-  if(this.isInBoard(xPos + 1, yPos + 1) && this.board[yPos + 1][xPos + 1].getBomb()){
+    let count = 0;
+    if(this.isInBoard(xPos + 1, yPos + 1) && this.board[yPos + 1][xPos + 1].getBomb()){
       count = count + 1;
     }
     if(this.isInBoard(xPos + 1, yPos) && this.board[yPos][xPos + 1].getBomb()){
@@ -512,6 +504,7 @@
       this.gameWon = true;
       this.board[coord.y][coord.x].isFlag = false;
       this.flagCount = 0;
+      this.sendScore();
     }
 
 
