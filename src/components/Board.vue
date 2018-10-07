@@ -202,6 +202,7 @@
 
           for (let i = 0; i < 5; i++) {
               scoreJSONArr[i] = localStorage.getItem(keyString.concat(i.toString()));
+              // @ts-ignore
               scoreObjArr[i] = JSON.parse(scoreJSONArr[i]);
           }
 
@@ -219,15 +220,14 @@
               }
           }
 
-          this.numScores = 0;
           for (let i = 0; i < 5; i++) {
               if (scoreObjArr[i] == null) {
                   scoreJSONArr[i] = null;
               }
               else {
-                  this.numScores++;
                   scoreJSONArr[i] = JSON.stringify(scoreObjArr[i]);
               }
+              // @ts-ignore
               localStorage.setItem(keyString.concat(i.toString()), scoreJSONArr[i]);
           }
           this.scoreArr = scoreObjArr;

@@ -33,7 +33,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import Board from 'Board.vue';
+import Board from './Board.vue';
 
 /**
  * Contains fields for collecting configuration input from the user

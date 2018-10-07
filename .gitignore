@@ -19,3 +19,8 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw*
+
+# Documentation-only files
+/src/components/Board.ts
+/src/components/Cell.ts
+/src/components/ConfigPage.ts

@@ -100,9 +100,11 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_components_cell_.cell.html#bomb" class="tsd-kind-icon">bomb</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_components_cell_.cell.html#getcanflag" class="tsd-kind-icon">get<wbr>Can<wbr>Flag</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_components_cell_.cell.html#isdisplayingvalue" class="tsd-kind-icon">is<wbr>Displaying<wbr>Value</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_components_cell_.cell.html#isflag" class="tsd-kind-icon">is<wbr>Flag</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_components_cell_.cell.html#isrevealed" class="tsd-kind-icon">is<wbr>Revealed</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_components_cell_.cell.html#value" class="tsd-kind-icon">value</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_components_cell_.cell.html#x" class="tsd-kind-icon">x</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_components_cell_.cell.html#y" class="tsd-kind-icon">y</a></li>
@@ -111,6 +113,8 @@
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_components_cell_.cell.html#cheatoff" class="tsd-kind-icon">cheat<wbr>Off</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_components_cell_.cell.html#cheaton" class="tsd-kind-icon">cheat<wbr>On</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_components_cell_.cell.html#displayvalue" class="tsd-kind-icon">display<wbr>Value</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_components_cell_.cell.html#getbomb" class="tsd-kind-icon">get<wbr>Bomb</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_components_cell_.cell.html#getflag" class="tsd-kind-icon">get<wbr>Flag</a></li>
@@ -125,12 +129,27 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="bomb" class="tsd-anchor"></a>
+					<h3>bomb</h3>
+					<div class="tsd-signature tsd-kind-icon">bomb<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in components/Cell.ts:27</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The letter &#39;X&#39; will represent the bomb.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="getcanflag" class="tsd-anchor"></a>
 					<h3>get<wbr>Can<wbr>Flag</h3>
 					<div class="tsd-signature tsd-kind-icon">get<wbr>Can<wbr>Flag<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in components/Cell.ts:31</li>
+							<li>Defined in components/Cell.ts:42</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -160,7 +179,7 @@
 					<div class="tsd-signature tsd-kind-icon">is<wbr>Displaying<wbr>Value<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in components/Cell.ts:26</li>
+							<li>Defined in components/Cell.ts:32</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -175,12 +194,27 @@
 					<div class="tsd-signature tsd-kind-icon">is<wbr>Flag<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> =&nbsp;false</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in components/Cell.ts:36</li>
+							<li>Defined in components/Cell.ts:47</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
 							<p>Indicates whether this cell has been flagged by the user</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="isrevealed" class="tsd-anchor"></a>
+					<h3>is<wbr>Revealed</h3>
+					<div class="tsd-signature tsd-kind-icon">is<wbr>Revealed<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in components/Cell.ts:37</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>This holds the value of isDisplayingValue while all isDisplayingValue changes to true in cheet mode. After cheat mode, isDisplayingValue is changed back to isRevealed.</p>
 						</div>
 					</div>
 				</section>
@@ -233,6 +267,50 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="cheatoff" class="tsd-anchor"></a>
+					<h3>cheat<wbr>Off</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">cheat<wbr>Off<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in components/Cell.ts:119</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Change this cell back to what it is when the cheat mode off.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="cheaton" class="tsd-anchor"></a>
+					<h3>cheat<wbr>On</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">cheat<wbr>On<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in components/Cell.ts:111</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Displays the information store in this cell in cheat mode.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 					<a name="displayvalue" class="tsd-anchor"></a>
 					<h3>display<wbr>Value</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -242,7 +320,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in components/Cell.ts:88</li>
+									<li>Defined in components/Cell.ts:103</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -264,7 +342,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in components/Cell.ts:73</li>
+									<li>Defined in components/Cell.ts:88</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -287,7 +365,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in components/Cell.ts:81</li>
+									<li>Defined in components/Cell.ts:96</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -310,7 +388,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in components/Cell.ts:54</li>
+									<li>Defined in components/Cell.ts:65</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -333,7 +411,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in components/Cell.ts:42</li>
+									<li>Defined in components/Cell.ts:53</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -361,7 +439,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in components/Cell.ts:65</li>
+									<li>Defined in components/Cell.ts:76</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -409,6 +487,9 @@
 						<a href="_components_cell_.cell.html" class="tsd-kind-icon">Cell</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_components_cell_.cell.html#bomb" class="tsd-kind-icon">bomb</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="_components_cell_.cell.html#getcanflag" class="tsd-kind-icon">get<wbr>Can<wbr>Flag</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
@@ -418,6 +499,9 @@
 								<a href="_components_cell_.cell.html#isflag" class="tsd-kind-icon">is<wbr>Flag</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_components_cell_.cell.html#isrevealed" class="tsd-kind-icon">is<wbr>Revealed</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="_components_cell_.cell.html#value" class="tsd-kind-icon">value</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
@@ -425,6 +509,12 @@
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="_components_cell_.cell.html#y" class="tsd-kind-icon">y</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_components_cell_.cell.html#cheatoff" class="tsd-kind-icon">cheat<wbr>Off</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_components_cell_.cell.html#cheaton" class="tsd-kind-icon">cheat<wbr>On</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_components_cell_.cell.html#displayvalue" class="tsd-kind-icon">display<wbr>Value</a>
