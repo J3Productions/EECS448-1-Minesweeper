@@ -1,6 +1,7 @@
 <template>
   <div>
     <p id="header">Minesweeper!</p>
+    <p id="header2">Flag all of the mines before time runs out.</p>
     <div id="config-wrapper">
       <div id="config">
         <table>
@@ -54,7 +55,7 @@ export default class ConfigPage extends Vue {
    * The number of bombs currently contained in the Bombs input
    */
   private bombs: number = 0;
-  
+
   /**
    * Player name. Using in score board.
    */
@@ -178,7 +179,7 @@ export default class ConfigPage extends Vue {
     }
 
     if(invalid.length == 3){
-      return(`${invalid[0]}, ${invalid[1]}, and ${invalid[2]} have invalid values.`);      
+      return(`${invalid[0]}, ${invalid[1]}, and ${invalid[2]} have invalid values.`);
     }
 
     return('');
@@ -212,6 +213,10 @@ export default class ConfigPage extends Vue {
   #header {
     font-size: 100px;
     margin-bottom: -10px;
+  }
+  #header2 {
+    font-size: 25px;
+    margin-bottom: 15px;
   }
   #config {
     border-radius: 10px;
